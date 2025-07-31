@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des sous-catégories{% endblock %}
+
+{% block body %}
+	<style>
+		.containerForm {
+			margin-top: 100px;
+		}
+		.table.bg-light {
+			background-color: rgba(0, 0, 0, 0.07) !important;
+		}
+		.table.bg-light th,
+		.table.bg-light td {
+			background-color: rgba(255, 255, 255, 0.58) !important;
+		}
+		.card {
+			border-radius: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+		.parallax {
+		background-image: url('/protected-bg/backgroundParallax2.png');
+		height: 100vh;
+		width: 100%;
+		background-attachment: fixed;
+		background-position: center;
+		background-repeat: no-repeat;
+		filter: grayscale(0.4);
+		background-size: cover;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		}
+	</style>
+	<div class="parallax">
+		<div class="container ">
+			<div class="row my-5">
+				<div class="card p-4 bg-light bg-opacity-50">
+					<h1>Liste des sous-catégories</h1>
+					<table class="table bg-light table-hover">
+						<thead>
+							<tr class="">
+								<th scope="col">ID</th>
+								<th scope="col">Nom de la sous-catégorie</th>
+								<th scope="col">Liée à la catégorie :</th>
+								<th scope="col">Vous pouvez :</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for sub_category in sub_categories %}
+								<tr>
+									<th scope="row">{{sub_category.id}}</th>
+									<td class="align-middle">{{sub_category.name}}</td>
+									<td class="align-middle">{{sub_category.category}}</td>
+									<td>
+										<a href="{{path('app_sub_category_edit', {'id': sub_category.id})}}" class="btn btn-outline-primary">Modifier</a>
+										<a onclick="return confirm('Voulez vous vraiment supprimer cette sous-catégorie ?')" href="{{path('app_sub_category_delete', {'id': sub_category.id})}}" class="btn btn-outline-danger">Supprimer</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				{# <div class="border-top border-2 border-light"></div> #}
+				<a href="{{path('app_sub_category_new')}}" class="btn btn-light text-dark mt-3 col-3">Ajouter une nouvelle sous-catégorie</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}

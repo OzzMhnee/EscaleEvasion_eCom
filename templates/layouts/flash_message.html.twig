@@ -1,0 +1,12 @@
+
+	{% block flash_messages %}
+		{% for label, messages in app.flashes %}
+			<div class="container mt-3">
+				<div class="alert alert-{{ label }}">
+					{% for message in messages %}
+						{{ message }}
+					{% endfor %}
+				</div>
+			</div>
+		{% endfor %}
+	{% endblock %}

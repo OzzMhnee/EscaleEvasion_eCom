@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Se connecter
+{% endblock %}
+
+{% block body %}
+
+	<style>
+		.parallax {
+            background-image: url('/protected-bg/backgroundParallax4.png');
+            height: 100vh;
+			width: 100%;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+	</style>
+
+	<div class="parallax">
+		<div class="container containerForm">
+			<div class="card p-5 col-6">
+				<form method="post">
+					{% if error %}
+						<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+					{% endif %}
+					<h1 class="h3 mb-3 font-weight-normal">Espace connexion</h1>
+					{# <label for="username">Email</label> #}
+					<input
+					type="email" value="{{ last_username }}" placeholder="Email" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
+					{# <label for="password">Password</label> #}
+					<input type="password" name="_password" placeholder="Password" id="password" class="form-control" autocomplete="current-password" required>
+					<input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+					<button class="btn btn-lg btn-dark " type="submit">
+						se connecter
+					</button>
+					{% if app.user %}{% endif %}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

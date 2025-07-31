@@ -1,0 +1,80 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="{{ path('app_home_page') }}">
+      <img src="/img/logoLight.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top"></a>
+    <a class="navbar-brand fw-bold" href="{{ path('app_home_page') }}">Escale Evasion</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      {% set categories = all_categories() %}
+      {% if categories|length > 0 %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Catégories
+          </a>
+          <ul class="dropdown-menu">
+            {% for category in categories %}
+              <li><a class="dropdown-item text-primary categoryTitle" href="#">{{ category.name }}</a></li>
+              <li><hr class="dropdown-divider"></li> 
+            {% endfor %}
+          </ul>
+        </li>
+      {% endif %}
+      {% if is_granted("ROLE_ADMIN") %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ path('app_category')}}" class="dropdown-item">Categories</a></li>
+            <li><a href="{{ path('app_category_add')}}" class="dropdown-item">Ajouter une Categorie</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a href="{{ path('app_sub_category_index')}}" class="dropdown-item">Sous-categories</a></li>
+            <li><a href="{{ path('app_sub_category_new')}}" class="dropdown-item">Ajouter une sous-categories</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a href="" class="dropdown-item">Produits</a></li>
+            <li><a href="" class="dropdown-item">Ajouter un produit</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a href="{{ path('app_user')}}" class="dropdown-item">Utilisateurs</a></li>
+          </ul>
+        </li>
+      {% endif %}
+        {# <li class="nav-item">
+          <a class="nav-link" href="{{ path('app_category') }}">Catégories</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav mb-2 mb-lg-0"> #}
+        {# <li class="nav-item me-2">
+          <a class="nav-link position-relative" href="{{ path('app_cart') }}">
+            <i class="bi bi-cart"></i> Panier
+            {# Affiche le nombre d'articles dans le panier si disponible #}
+            {# {% if app.session.get('cart_count') %}
+              <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">
+                {{ app.session.get('cart_count') }}
+              </span>
+            {% endif %}
+          </a>
+        </li> #}
+      </ul>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <form class="d-flex" role="search">
+          <input type="search" class="form-control me-2" placeholder="Rechercher un produit" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Rechercher</button>
+        </form>
+        {% if app.user %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_register') }}">S'inscrire</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_login') }}">Se connecter</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

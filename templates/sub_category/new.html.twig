@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Sous Catégorie{% endblock %}
+
+
+
+{% block body %}
+	<style>
+		.containerForm {
+			margin-top: -20%;
+		}
+		.parallax {
+		background-image: url('/protected-bg/backgroundParallax2.png');
+		height: 100vh;
+		width: 100%;
+		background-attachment: fixed;
+		background-position: center;
+		background-repeat: no-repeat;
+		filter: grayscale(0.4);
+		background-size: cover;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		}
+	</style>
+
+	<div class="parallax">
+		<div class="container containerForm">
+			<div class="card p-4 col-6 bg-light bg-opacity-50 text-center ">
+				<h1>Ajouter une nouvelle sous-catégorie</h1>
+                {{ include('sub_category/_form.html.twig') }}
+                <a href="{{ path('app_sub_category_index') }}">back to list</a>
+			</div>
+		</div>	
+	</div>							
+{% endblock %}

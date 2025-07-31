@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Category
+{% endblock %}
+
+{% block body %}
+	<style>
+		.containerForm {
+			margin-top: -20%;
+		}
+		.parallax {
+		background-image: url('/protected-bg/backgroundParallax2.png');
+		height: 100vh;
+		width: 100%;
+		background-attachment: fixed;
+		background-position: center;
+		background-repeat: no-repeat;
+		filter: grayscale(0.4);
+		background-size: cover;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		}
+	</style>
+
+	<div class="parallax">
+		<div class="container containerForm">
+			<div class="card p-4 col-6 bg-light bg-opacity-50 text-center ">
+				<h1>Ajouter une nouvelle catégorie</h1>
+				{{ form_errors(form) }}
+				{{ form_start(form) }}
+								{{ form_widget(form.name,{ 'attr': {'class': 'form form-control text-center', "placeholder": "Nom de la catégorie", "style": "text-align: center;" } }) }}
+				{# <button type="submit" class="btn btn-lg btn-dark">Add</button> #}
+				<input href="{{ path('app_category_add') }}" type="submit" class="btn btn-lg btn-dark " value="Ajouter"/>
+				{{ form_end(form) }}
+
+			</div>
+		</div>	
+	</div>							
+{% endblock %}

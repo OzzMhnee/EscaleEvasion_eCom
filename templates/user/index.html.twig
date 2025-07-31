@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Categories List {% endblock %}
+{% block body %}
+
+	<style>
+		.containerForm {
+			margin-top: 100px;
+		}
+		.table.bg-light {
+			background-color: rgba(0, 0, 0, 0.07) !important;
+		}
+		.table.bg-light th,
+		.table.bg-light td {
+			background-color: rgba(255, 255, 255, 0.58) !important;
+		}
+		.card {
+			border-radius: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+		.parallax {
+		background-image: url('/protected-bg/backgroundParallax2.png');
+		height: 100vh;
+		width: 100%;
+		background-attachment: fixed;
+		background-position: center;
+		background-repeat: no-repeat;
+		filter: grayscale(0.4);
+		background-size: cover;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		}
+	</style>
+	<div class="parallax">
+		<div class="container ">
+			<div class="row my-5">
+				<div class="card p-4 bg-light bg-opacity-50">
+					<h1>Liste des utilisateurs</h1>
+					{% for message in app.flashes('messages')%}
+						<div class="alert alert-success ">
+							{{message}}
+						</div>
+					{% endfor %}
+					<table class="table bg-light table-hover">
+						<thead>
+							<tr class="">
+								<th scope="col">ID</th>
+								<th scope="col">Nom</th>
+								<th scope="col">Prénom</th>
+								<th scope="col">Adresse-email</th>
+								<th scope="col">Rôle</th>
+								<th scope="col">Vous pouvez :</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for user in users %}
+								<tr>
+									<th scope="row">{{user.id}}</th>
+									<td class="align-middle">{{user.lastName}}</td>
+									<td class="align-middle">{{user.firstName}}</td>
+									<td class="align-middle">{{user.email}}</td>
+									<td class="align-middle">{{user.roles|join(', ')}}</td>
+									<td>
+                                    {% if 'ROLE_ADMIN' not in user.roles %}
+                                        {% if 'ROLE_EDITOR' not in user.roles %}
+                                            <a onclick="return confirm('Voulez vous vraiment donner le rôle d\'éditeur à cet utilisateur ?')" href="{{ path('app_user_upToEditor', {'id': user.id}) }}" class="btn btn-outline-primary">Donner rôle éditeur</a>
+                                        {% else %}
+                                            <a onclick="return confirm('Voulez vous vraiment retirer le rôle d\'éditeur à cet utilisateur ?')" href="{{ path('app_user_removeEditor', {'id': user.id}) }}" class="btn btn-outline-danger">Retirer rôle éditeur</a>
+                                        {% endif %}
+                                        <a onclick="return confirm('Voulez vous vraiment supprimer cet utilisateur ?')" href="{{ path('app_user_delete', {'id': user.id}) }}" class="btn btn-outline-danger">Supprimer</a>
+                                    {% endif %}									
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				{# <div class="border-top border-2 border-light"></div> #}
+			</div>
+		</div>
+	</div>
+{% endblock %}
