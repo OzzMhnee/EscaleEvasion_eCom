@@ -25,13 +25,26 @@
 				<h1>Register</h1>
 				{{ form_errors(registrationForm) }}
 				{{ form_start(registrationForm) }}
-				{{csrf_token('intention') }}
-				{{ form_widget(registrationForm.email,{ 'attr': {'class': 'form-control', "placeholder": "Email" } }) }}
-				{{ form_widget(registrationForm.first_name,{ 'attr': {'class': 'form-control', "placeholder": "First Name"}  }) }}
-				{{ form_widget(registrationForm.last_name,{ 'attr': {'class': 'form-control', "placeholder": "Last Name" } }) }}
-				{# {{ form_row(registrationForm.password)  }} #}
-				{{ form_widget(registrationForm.plainPassword,{ 'attr': {'class': 'form-control', "placeholder": "Password" }, "label": "Password" }) }}
-				{{ form_row(registrationForm.agreeTerms,{ 'attr': {'class': 'checkbox'}})  }}
+				{{ csrf_token('intention') }}
+				{{ form_widget(registrationForm.email, { 'attr': {'class': 'form-control', "placeholder": "Email" } }) }}
+				{{ form_widget(registrationForm.first_name, { 'attr': {'class': 'form-control', "placeholder": "First Name"} }) }}
+				{{ form_widget(registrationForm.last_name, { 'attr': {'class': 'form-control', "placeholder": "Last Name" } }) }}
+
+				{# Affiche l'erreur globale du champ répété #}
+				{{ form_errors(registrationForm.plainPassword) }}
+
+				<div class="mb-3">
+					{{ form_label(registrationForm.plainPassword.first, 'Mot de passe', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+					{{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control', 'placeholder': 'Mot de passe'}}) }}
+					{{ form_errors(registrationForm.plainPassword.first) }}
+				</div>
+				<div class="mb-3">
+					{{ form_label(registrationForm.plainPassword.second, 'Répéter le mot de passe', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+					{{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder': 'Répéter le mot de passe'}}) }}
+					{{ form_errors(registrationForm.plainPassword.second) }}
+				</div>
+
+				{{ form_row(registrationForm.agreeTerms, { 'attr': {'class': 'checkbox'}}) }}
 				<button type="submit" class="btn btn-lg btn-dark">Register</button>
 				{{ form_end(registrationForm) }}
 			</div>

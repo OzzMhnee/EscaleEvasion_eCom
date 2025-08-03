@@ -1,12 +1,42 @@
-
-	{% block flash_messages %}
-		{% for label, messages in app.flashes %}
-			<div class="container mt-3">
-				<div class="alert alert-{{ label }}">
-					{% for message in messages %}
-						{{ message }}
-					{% endfor %}
-				</div>
+{% block flash_messages %}
+	<style>
+		.flash-white {
+			background: rgba(255,255,255,0.97) !important;
+			color: #222 !important;
+			border: 1px solid #eee !important;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+			max-width: 600px;
+			margin: 0 auto;
+			margin-top: 1.5rem;
+			margin-bottom: 0;
+			padding: 1rem 2rem;
+			text-align: center;
+		}
+		.flash-container {
+			width: 100vw;
+			position: fixed;
+			top: 70px;
+			left: 0;
+			z-index: 2000;
+			display: flex;
+			justify-content: center;
+			pointer-events: none;
+		}
+		@media (max-width: 700px) {
+			.flash-white {
+				max-width: 98vw;
+				padding: 0.5rem 0.5rem;
+				font-size: 0.95rem;
+			}
+		}
+	</style>
+	{% for label, messages in app.flashes %}
+		<div class="flash-container">
+			<div class="alert flash-white">
+				{% for message in messages %}
+					{{ message }}
+				{% endfor %}
 			</div>
-		{% endfor %}
-	{% endblock %}
+		</div>
+	{% endfor %}
+{% endblock %}

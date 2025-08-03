@@ -14,12 +14,13 @@ class SubCategoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('Category', EntityType::class, [
+            ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
+                'label' => 'Catégorie parente',
+                'required' => true,
             ])
-        ;
+            ->add('name');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

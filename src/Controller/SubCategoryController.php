@@ -10,8 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/sub/category')]
+#[Route('/admin/sub/category')]
+#[IsGranted('ROLE_ADMIN')]
 final class SubCategoryController extends AbstractController
 {
     #[Route(name: 'app_sub_category_index', methods: ['GET'])]
@@ -32,7 +34,7 @@ final class SubCategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($subCategory);
             $entityManager->flush();
-
+            $this->addFlash('success', 'Sous-catégorie ajoutée avec succès !');
             return $this->redirectToRoute('app_sub_category_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -58,7 +60,7 @@ final class SubCategoryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
+            $this->addFlash('success', 'Sous-catégorie modifiée avec succès !');
             return $this->redirectToRoute('app_sub_category_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -75,7 +77,7 @@ final class SubCategoryController extends AbstractController
             $entityManager->remove($subCategory);
             $entityManager->flush();
         }
-
+        $this->addFlash('success', 'Sous-catégorie supprimée avec succès !');
         return $this->redirectToRoute('app_sub_category_index', [], Response::HTTP_SEE_OTHER);
     }
 }

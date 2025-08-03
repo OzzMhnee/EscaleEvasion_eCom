@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -30,19 +31,25 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
 
-            ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
                 'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
+                'first_options'  => [
+                    'label' => 'Mot de passe',
+                    'attr' => ['autocomplete' => 'new-password', 'class' => 'form-control'],
+                ],
+                'second_options' => [
+                    'label' => 'Répéter le mot de passe',
+                    'attr' => ['autocomplete' => 'new-password', 'class' => 'form-control'],
+                ],
+                'invalid_message' => 'Les mots de passe doivent être identiques.',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Veuillez entrer un mot de passe',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
                         'max' => 4096,
                     ]),
                 ],

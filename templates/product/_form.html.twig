@@ -1,0 +1,171 @@
+{{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
+
+    {# Champs booléens à afficher en ligne, isAvailable à la fin #}
+    <hr class="my-3">
+    <div class="col-12">
+        <div class="d-flex flex-row flex-wrap gap-4 justify-content-center mb-3">
+                        {% set boolLabels = {
+                'isSwimmingPool': 'Piscine',
+                'isBath': 'Baignoire',
+                'isClim': 'Climatisation',
+                'isLaveLinge': 'Lave-linge',
+                'isSecheLinge': 'Sèche-linge',
+                'isLaveVaisselle': 'Lave-vaisselle',
+                'isChauffage': 'Chauffage'
+            } %}
+            {% for boolField in [
+                'isSwimmingPool', 'isBath', 'isClim', 'isLaveLinge', 'isSecheLinge', 'isLaveVaisselle', 'isChauffage'
+            ] %}
+                <div class="text-center">
+                    {{ form_label(attribute(form, boolField), boolLabels[boolField], {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                    <div>
+                        {{ form_widget(attribute(form, boolField), {'attr': {'class': 'form-check-input'}}) }}
+                    </div>
+                    {{ form_errors(attribute(form, boolField)) }}
+                </div>
+            {% endfor %}
+            <div class="text-center ms-4 border  border-dark rounded p-1">
+                {{ form_label(form.isAvailable, 'Disponible à la location', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                <div>
+                    {{ form_widget(form.isAvailable, {'attr': {'class': 'form-check-input'}}) }}
+                </div>
+                {{ form_errors(form.isAvailable) }}
+            </div>
+        </div>
+    </div>
+
+    {# Ligne : name, city, departement #}
+    <hr class="my-3">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.name, 'Titre du bien', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.name) }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.city, 'Ville', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.city) }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.departement, 'Département', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.departement, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.departement) }}
+            </div>
+        </div>
+    </div>
+
+    {# Ligne : couchages, surface, price #}
+    <hr class="my-3">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.couchages, 'Nombre de couchages', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.couchages, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.couchages) }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.surface, 'Surface (m²)', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.surface, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.surface) }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.price, 'Prix par nuit (€)', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.price) }}
+            </div>
+        </div>
+    </div>
+
+    {# Ligne : description (2/3) et subCategory (1/3) #}
+    <hr class="my-3">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-md-8 mb-3">
+                {{ form_label(form.description, 'Description détaillée', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.description, {
+                    'attr': {
+                        'class': 'form-control',
+                        'style': 'min-height: 180px;  resize: vertical;'
+                    }
+                }) }}
+                {{ form_errors(form.description) }}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form_label(form.subCategory, 'Sous-catégories', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.subCategory, {
+                    'attr': {
+                        'class': 'form-control',
+                        'style': 'height: 180px;'
+                    }
+                }) }}
+                {{ form_errors(form.subCategory) }}
+            </div>
+        </div>
+    </div>
+
+    {# startDate et endDate côte à côte #}
+    <hr class="my-3">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.startDate, 'Date de début de disponibilité', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.startDate, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.startDate) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_label(form.endDate, 'Date de fin de disponibilité', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                {{ form_widget(form.endDate, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.endDate) }}
+            </div>
+        </div>
+    </div>
+
+    {# Zone d'import d'images avec lignes horizontales #}
+    <div class="col-12">
+        <hr class="my-3">
+        <div class="row">
+            {% set imageLabels = {
+                'imageFile': 'Image principale',
+                'imageFile2': 'Image secondaire 2',
+                'imageFile3': 'Image secondaire 3',
+                'imageFile4': 'Image secondaire 4',
+                'imageFile5': 'Image secondaire 5'
+            } %}
+            {% for field in ['imageFile', 'imageFile2', 'imageFile3', 'imageFile4', 'imageFile5'] %}
+                <div class="col-md-4 mb-3">
+                    {{ form_label(attribute(form, field), imageLabels[field], {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                    {{ form_widget(attribute(form, field), {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(attribute(form, field)) }}
+                </div>
+            {% endfor %}
+        </div>
+        <hr class="my-3">
+    </div>
+
+    {# Les autres champs #}
+    {% for field in form %}
+        {% if field.vars.name not in [
+            '_token',
+            'isSwimmingPool', 'isBath', 'isClim', 'isLaveLinge', 'isSecheLinge', 'isLaveVaisselle', 'isChauffage',
+            'isAvailable',
+            'startDate', 'endDate',
+            'name', 'city', 'departement', 'couchages', 'surface', 'price',
+            'description', 'subCategory',
+            'imageFile', 'imageFile2', 'imageFile3', 'imageFile4', 'imageFile5'
+        ] %}
+            <div class="col-12">
+                <div class="mb-3">
+                    {{ form_label(field, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                    {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(field) }}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    <div class="col-12">
+        <button class="btn btn-dark w-100">{{ button_label|default('Enregistrer') }}</button>
+    </div>
+{{ form_end(form) }}

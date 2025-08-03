@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mon profil{% endblock %}
+{% block flash_message %}
+    {% include 'layouts/flash_message.html.twig' %}
+{% endblock %}
+{% block body %}
+    <style>
+        .parallax {
+            background-image: url('/protected-bg/backgroundParallax2.png');
+            min-height: 100vh;
+            width: 100%;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <div class="parallax">
+        <div class="container">
+            <div class="row my-5 justify-content-center">
+                <div class="card p-4 bg-light bg-opacity-50" style="max-width: 600px;">
+                    <h2 class="mb-4 text-center">Mon profil</h2>
+                    {{ form_start(form) }}
+                        {{ form_errors(form) }}
+                        <div class="mb-3">
+                            {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.first_name, 'Prénom', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.first_name, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.first_name) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.last_name, 'Nom', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.last_name, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.last_name) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.plainPassword.first, 'Nouveau mot de passe', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.plainPassword.first) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.plainPassword.second, 'Répéter le mot de passe', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.plainPassword.second) }}
+                            <div class="form-text">Laisse vide pour ne pas changer le mot de passe.</div>
+                        </div>
+                        <button class="btn btn-dark w-100">Enregistrer les modifications</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

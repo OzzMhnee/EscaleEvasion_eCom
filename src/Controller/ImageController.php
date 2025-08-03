@@ -75,4 +75,40 @@ class ImageController extends AbstractController
             'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
         ]);
     }
+     #[Route('/protected-img/{filename}', name: 'protected_img')]
+    public function protectedImg(string $filename): Response
+    {
+        $imagePath = $this->getParameter('kernel.project_dir') . '/private/img/' . $filename;
+
+        if (!file_exists($imagePath)) {
+            throw $this->createNotFoundException('Image non trouvée');
+        }
+
+        // Détecte le type d'image
+        $ext = strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
+        if ($ext === 'png') {
+            $image = imagecreatefrompng($imagePath);
+            $contentType = 'image/png';
+            $outputFunc = 'imagepng';
+        } elseif (in_array($ext, ['jpg', 'jpeg'])) {
+            $image = imagecreatefromjpeg($imagePath);
+            $contentType = 'image/jpeg';
+            $outputFunc = 'imagejpeg';
+        } else {
+            throw $this->createNotFoundException('Format d\'image non supporté');
+        }
+
+        // Pas de filigrane ici, on sert l'image brute
+
+        ob_start();
+        $outputFunc($image);
+        $imageData = ob_get_clean();
+
+        imagedestroy($image);
+
+        return new Response($imageData, 200, [
+            'Content-Type' => $contentType,
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+        ]);
+    }
 }

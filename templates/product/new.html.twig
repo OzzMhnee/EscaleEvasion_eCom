@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Produit{% endblock %}
+
+{% block body %}
+	<style>
+
+		.parallax {
+		background-image: url('/protected-bg/backgroundParallax2.png');
+		height: 100vh;
+		width: 100%;
+		background-attachment: fixed;
+		background-position: center;
+		background-repeat: no-repeat;
+		filter: grayscale(0.4);
+		background-size: cover;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		}
+	</style>
+
+	<div class="parallax">
+		<div class="container-fluid h-100 d-flex justify-content-center align-items-center">
+			<div class="card p-4 col-12 col-sm-10 col-md-8 col-lg-6 bg-light bg-opacity-50 text-center">
+				<h1>Ajouter une nouveau produit</h1>
+				{{ include('product/_form.html.twig') }}
+                <a href="{{ path('app_product_index') }}">Revenir à la liste des produits</a>
+			</div>
+		</div>
+	</div>						
+{% endblock %}

@@ -1,0 +1,231 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail du produit{% endblock %}
+
+{% block body %}
+	<style>
+		.card {
+			border-radius: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+		.parallax {
+			background-image: url('/protected-bg/backgroundParallax2.png');
+			min-height: 100vh;
+			width: 100%;
+			background-attachment: fixed;
+			background-position: center;
+			background-repeat: no-repeat;
+			filter: grayscale(0.4);
+			background-size: cover;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.img-show-thumb {
+			max-width: 120px;
+			max-height: 120px;
+			border-radius: 8px;
+			margin-bottom: 0.5rem;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+			background: #fff;
+		}
+		.img-show-label {
+			font-size: 0.95rem;
+			color: #444;
+			font-weight: 500;
+			margin-bottom: 0.25rem;
+			display: block;
+		}
+	</style>
+	<div class="parallax">
+		<div class="container">
+			<div class="row my-5 justify-content-center">
+				<div class="card p-4 bg-light bg-opacity-50" style="max-width: 1200px;">
+					<div class="text-center mb-2">
+						<h1 class="mb-2">{{ product.name }}</h1>
+					</div>
+					<hr class="my-4">
+					<div class="row">
+						{# Colonne de gauche : images #}
+						<div class="col-md-4 border-end d-flex flex-column align-items-center">
+							<div class="mb-4 text-center w-100">
+								<span class="fw-bold d-block mb-2">Images du produit</span>
+								{% set images = [] %}
+								{% if product.imageUrl %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.imageUrl}), 'label': 'Image principale'}]) %}{% endif %}
+								{% if product.image2 %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.image2}), 'label': 'Image 2'}]) %}{% endif %}
+								{% if product.image3 %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.image3}), 'label': 'Image 3'}]) %}{% endif %}
+								{% if product.image4 %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.image4}), 'label': 'Image 4'}]) %}{% endif %}
+								{% if product.image5 %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.image5}), 'label': 'Image 5'}]) %}{% endif %}
+																{% if images|length > 0 %}
+									{% for img in images %}
+										<span class="img-show-label">{{ img.label }}</span>
+										<img src="{{ img.src }}" alt="{{ img.label }}" class="img-show-thumb mb-3" style="cursor:pointer"
+											onclick="openImgModal({{ loop.index0 }})">
+									{% endfor %}
+								{% else %}
+									<span class="text-muted">Aucune image enregistrée</span>
+								{% endif %}
+								{# Modal pour affichage grand format et navigation #}
+								<div class="modal fade" id="imgModal" tabindex="-1" aria-labelledby="imgModalLabel" aria-hidden="true">
+								  <div class="modal-dialog modal-dialog-centered" style="max-width:85vw;">
+									<div class="modal-content bg-dark" style="width:85vw;max-width:85vw;">
+									  <div class="modal-body text-center position-relative p-0" style="width:100%;height:85vh;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+										<button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close" style="z-index:1056;"></button>
+										<button type="button" class="btn btn-light position-absolute top-50 start-0 translate-middle-y" id="imgPrevBtn" style="z-index:1056;opacity:0.7;min-height:60px;">
+											&lt;
+										</button>
+										<img id="modalImg" src="" alt="Image grand format" style="width:100%;height:100%;object-fit:contain; border-radius:10px; box-shadow:0 4px 16px #0008; display:block; margin:auto;z-index:1050;">
+										<button type="button" class="btn btn-light position-absolute top-50 end-0 translate-middle-y" id="imgNextBtn" style="z-index:1056;opacity:0.7;min-height:60px;">
+											&gt;
+										</button>
+										<div id="modalImgLabel" class="text-white mt-3 position-absolute bottom-0 start-50 translate-middle-x" style="background:rgba(0,0,0,0.5);padding:0.5rem 1.5rem;border-radius:8px;z-index:1056;"></div>
+									  </div>
+									</div>
+								  </div>
+								</div>
+							</div>
+						</div>
+						{# Colonne de droite : infos produit #}
+						<div class="col-md-8">
+							{# Description détaillée #}
+							<div class="mb-3">
+								<strong>Description détaillée :</strong>
+								<div>{{ product.description }}</div>
+							</div>
+							<hr class="my-3">
+							{# Ville / Département #}
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<strong>Ville :</strong> {{ product.city }}
+								</div>
+								<div class="col-md-6">
+									<strong>Département :</strong> {{ product.departement }}
+								</div>
+							</div>
+							<hr class="my-3">
+							{# Dates de disponibilité #}
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<strong>Date de début de disponibilité :</strong>
+									{{ product.startDate ? product.startDate|date('d/m/Y') : '' }}
+								</div>
+								<div class="col-md-6">
+									<strong>Date de fin de disponibilité :</strong>
+									{{ product.endDate ? product.endDate|date('d/m/Y') : '' }}
+								</div>
+							</div>
+							<hr class="my-3">
+							{# Équipements #}
+							<div class="mb-3">
+								<strong>Équipements :</strong>
+								<ul class="list-inline mb-0 d-flex justify-content-end">
+									<li class="list-inline-item">{% if product.isSwimmingPool %}<span class="badge bg-info text-dark">Piscine</span>{% endif %}</li>
+									<li class="list-inline-item">{% if product.isBath %}<span class="badge bg-secondary">Baignoire</span>{% endif %}</li>
+									<li class="list-inline-item">{% if product.isClim %}<span class="badge bg-primary">Climatisation</span>{% endif %}</li>
+									<li class="list-inline-item">{% if product.isLaveLinge %}<span class="badge bg-dark">Lave-linge</span>{% endif %}</li>
+									<li class="list-inline-item">{% if product.isSecheLinge %}<span class="badge bg-warning text-dark">Sèche-linge</span>{% endif %}</li>
+									<li class="list-inline-item">{% if product.isLaveVaisselle %}<span class="badge bg-success">Lave-vaisselle</span>{% endif %}</li>
+									<li class="list-inline-item">{% if product.isChauffage %}<span class="badge bg-danger">Chauffage</span>{% endif %}</li>
+								</ul>
+							</div>
+							<hr class="my-3">
+							{# Couchages / Surface #}
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<strong>Nombre de couchages :</strong> {{ product.couchages }}
+								</div>
+								<div class="col-md-6">
+									<strong>Surface :</strong> {{ product.surface }} m²
+								</div>
+							</div>
+							<hr class="my-3">
+							{# Catégories / Prix #}
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<strong>Sous-catégories :</strong>
+									{% for sub in product.subCategory %}
+										{{ sub.name }}{% if not loop.last %}, {% endif %}
+									{% else %}
+										Aucune
+									{% endfor %}
+								</div>
+								<div class="col-md-6">
+									<strong>Prix par nuit (€) :</strong> {{ product.price }} €
+								</div>
+							</div>
+							<hr class="my-4">
+							{# Disponible à la location #}
+							<div class="mb-3 d-flex justify-content-center align-items-center">
+								<strong>Disponible à la location :&nbsp;</strong>
+								{% if product.isAvailable %}
+									<span class="badge bg-success">Oui</span>
+								{% else %}
+									<span class="badge bg-secondary">Non</span>
+								{% endif %}
+							</div>
+                            <hr class="my-4">
+							<div class="d-flex flex-column align-items-center gap-2 mt-4 w-100">
+								<a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-dark btn-sm px-4 w-50">Modifier</a>
+								<form method="post" action="{{ path('app_product_delete', {'id': product.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce produit ?');" class="w-100 d-flex flex-column align-items-center">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+									<button class="btn btn-danger btn-sm px-4 w-50 mt-2" type="submit">Supprimer</button>
+								</form>
+								<a href="{{ path('app_product_index') }}" class="btn btn-outline-secondary btn-sm px-4 w-50 text-dark mt-2">Retour à la liste</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+const images = [
+	{% if product.imageUrl %}{ src: "{{ path('protected_img', {'filename': product.imageUrl }) }}", label: "Image principale" },{% endif %}
+	{% if product.image2 %}{ src: "{{ path('protected_img', {'filename': product.image2 }) }}", label: "Image 2" },{% endif %}
+	{% if product.image3 %}{ src: "{{ path('protected_img', {'filename': product.image3 }) }}", label: "Image 3" },{% endif %}
+	{% if product.image4 %}{ src: "{{ path('protected_img', {'filename': product.image4 }) }}", label: "Image 4" },{% endif %}
+	{% if product.image5 %}{ src: "{{ path('protected_img', {'filename': product.image5 }) }}", label: "Image 5" },{% endif %}
+];
+let currentIndex = 0;
+function showImage(idx) {
+	if (images.length === 0) return;
+	currentIndex = (idx + images.length) % images.length;
+	const modalImg = document.getElementById('modalImg');
+	const modalLabel = document.getElementById('modalImgLabel');
+	modalImg.src = images[currentIndex].src;
+	modalLabel.textContent = images[currentIndex].label;
+}
+function openImgModal(idx) {
+	const modal = new bootstrap.Modal(document.getElementById('imgModal'));
+	showImage(idx);
+	modal.show();
+}
+document.addEventListener('DOMContentLoaded', function() {
+	const prevBtn = document.getElementById('imgPrevBtn');
+	const nextBtn = document.getElementById('imgNextBtn');
+	const imgModal = document.getElementById('imgModal');
+	const modalImg = document.getElementById('modalImg');
+	const modalLabel = document.getElementById('modalImgLabel');
+	if (prevBtn && nextBtn) {
+		prevBtn.addEventListener('click', function() {
+			showImage(currentIndex - 1);
+		});
+		nextBtn.addEventListener('click', function() {
+			showImage(currentIndex + 1);
+		});
+	}
+	if (imgModal) {
+		imgModal.addEventListener('hidden.bs.modal', function () {
+			modalImg.src = '';
+			modalLabel.textContent = '';
+		});
+	}
+});
+</script>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le produit{% endblock %}
+
+{% block body %}
+	<style>
+		.card {
+			border-radius: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+		.parallax {
+			background-image: url('/protected-bg/backgroundParallax2.png');
+			min-height: 100vh;
+			width: 100%;
+			background-attachment: fixed;
+			background-position: center;
+			background-repeat: no-repeat;
+			filter: grayscale(0.4);
+			background-size: cover;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.img-edit-thumb {
+			max-width: 120px;
+			max-height: 120px;
+			border-radius: 8px;
+			margin-bottom: 0.5rem;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+			background: #fff;
+		}
+		.img-edit-label {
+			font-size: 0.95rem;
+			color: #444;
+			font-weight: 500;
+			margin-bottom: 0.25rem;
+			display: block;
+		}
+	</style>
+	<div class="parallax">
+		<div class="container">
+			<div class="row my-5 justify-content-center">
+				<div class="card p-4 bg-light bg-opacity-50" style="max-width: 1200px;">
+					<div class="text-center mb-2">
+						<h1 class="mb-2">Modifier le produit</h1>
+					</div>
+					<div class="row">
+						{# Colonne de gauche : images existantes + boutons #}
+						<div class="col-md-4 border-end d-flex flex-column align-items-center">
+							<div class="mb-4 text-center w-100">
+								<span class="fw-bold d-block mb-2">Images actuelles</span>
+								{% if product.imageUrl %}
+									<span class="img-edit-label">Image principale</span>
+									<img src="{{ path('protected_img', {'filename': product.imageUrl }) }}" alt="Image principale" class="img-edit-thumb mb-3">
+								{% endif %}
+								{% if product.image2 %}
+									<span class="img-edit-label">Image 2</span>
+									<img src="{{ path('protected_img', {'filename': product.image2 }) }}" alt="Image 2" class="img-edit-thumb mb-3">
+								{% endif %}
+								{% if product.image3 %}
+									<span class="img-edit-label">Image 3</span>
+									<img src="{{ path('protected_img', {'filename': product.image3 }) }}" alt="Image 3" class="img-edit-thumb mb-3">
+								{% endif %}
+								{% if product.image4 %}
+									<span class="img-edit-label">Image 4</span>
+									<img src="{{ path('protected_img', {'filename': product.image4 }) }}" alt="Image 4" class="img-edit-thumb mb-3">
+								{% endif %}
+								{% if product.image5 %}
+									<span class="img-edit-label">Image 5</span>
+									<img src="{{ path('protected_img', {'filename': product.image5 }) }}" alt="Image 5" class="img-edit-thumb mb-3">
+								{% endif %}
+								{% if not (product.imageUrl or product.image2 or product.image3 or product.image4 or product.image5) %}
+									<span class="text-muted">Aucune image enregistrée</span>
+								{% endif %}
+							</div>
+							<hr class="my-3 w-100">
+							<div class="d-flex flex-column align-items-center w-100">
+								<form method="post" action="{{ path('app_product_delete', {'id': product.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce produit ?');" class="w-100 d-flex flex-column align-items-center">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+									<button class="btn btn-danger btn-sm px-4 w-100 mt-2" type="submit" style="max-width:220px;">Supprimer</button>
+								</form>
+								<a href="{{ path('app_product_index') }}" class="btn btn-outline-secondary btn-sm px-4 w-100 text-dark mt-2" style="max-width:220px;">Retour à la liste des produits</a>
+							</div>
+						</div>
+						{# Colonne de droite : formulaire #}
+						<div class="col-md-8">
+							{{ include('product/_form.html.twig', {'button_label': 'Enregistrer les modifications'}) }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

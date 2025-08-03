@@ -31,7 +31,7 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-
+            $this->addFlash('success', 'Votre compte a bien été créé, vous êtes maintenant connecté !');
             return $security->login($user, 'form_login', 'main');
         }
 

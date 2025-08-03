@@ -1,13 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit SubCategory{% endblock %}
+{% block title %}Modifier la sous-catégorie{% endblock %}
 
 {% block body %}
-    <h1>Edit SubCategory</h1>
-
-    {{ include('sub_category/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_sub_category_index') }}">back to list</a>
-
-    {{ include('sub_category/_delete_form.html.twig') }}
+	<style>
+		.card {
+			border-radius: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+		.parallax {
+			background-image: url('/protected-bg/backgroundParallax2.png');
+			height: 100vh;
+			width: 100%;
+			background-attachment: fixed;
+			background-position: center;
+			background-repeat: no-repeat;
+			filter: grayscale(0.4);
+			background-size: cover;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	</style>
+	<div class="parallax">
+		<div class="container">
+			<div class="row my-5 justify-content-center">
+				<div class="card p-4 bg-light bg-opacity-50" style="max-width: 600px;">
+                    <div class="text-center mb-2">
+					    <h1 class="mb-2">Modifier la sous-catégorie</h1>
+                    </div>
+                    <hr class="my-4">
+					{{ form_start(form) }}
+                        {% if form.category is defined %}
+                            <div class="mb-3">
+                                {{ form_label(form.category, 'Catégorie parente', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                {{ form_widget(form.category, { 'attr': {'class': 'form-control text-center', "placeholder": "Catégorie parente" } }) }}
+                                {{ form_errors(form.category) }}
+                            </div>
+						{% endif %}
+						<div class="mb-3">
+							{{ form_label(form.name, 'Nom de la sous-catégorie', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+							{{ form_widget(form.name, { 'attr': {'class': 'form-control text-center', "placeholder": "Nom de la sous-catégorie" } }) }}
+							{{ form_errors(form.name) }}
+						</div>
+                        <hr class="my-4">
+						<div class="d-flex flex-column align-items-center gap-2 mt-4 w-100">
+							<button type="submit" class="btn btn-dark btn-sm px-4 w-50">Enregistrer la modification</button>
+							<form method="post" action="{{ path('app_sub_category_delete', {'id': sub_category.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cette sous-catégorie ?');" class="w-100">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sub_category.id) }}">
+								<button class="btn btn-danger btn-sm px-4 w-50 mt-2" type="submit">Supprimer</button>
+							</form>
+                            <a href="{{ path('app_sub_category_index') }}" class="btn btn-outline-secondary btn-sm px-4 w-50 text-dark mt-2">Retour à la liste des sous-catégories</a>
+						</div>
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
