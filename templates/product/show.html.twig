@@ -57,7 +57,7 @@
 								{% if product.image3 %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.image3}), 'label': 'Image 3'}]) %}{% endif %}
 								{% if product.image4 %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.image4}), 'label': 'Image 4'}]) %}{% endif %}
 								{% if product.image5 %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.image5}), 'label': 'Image 5'}]) %}{% endif %}
-																{% if images|length > 0 %}
+								{% if images|length > 0 %}
 									{% for img in images %}
 										<span class="img-show-label">{{ img.label }}</span>
 										<img src="{{ img.src }}" alt="{{ img.label }}" class="img-show-thumb mb-3" style="cursor:pointer"
@@ -171,7 +171,8 @@
 									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
 									<button class="btn btn-danger btn-sm px-4 w-50 mt-2" type="submit">Supprimer</button>
 								</form>
-								<a href="{{ path('app_product_index') }}" class="btn btn-outline-secondary btn-sm px-4 w-50 text-dark mt-2">Retour à la liste</a>
+								<a href="{{ path('app_reservation_new', {'id': product.id}) }}" class="btn btn-primary btn-sm px-4 w-50 text-dark mt-2">Réserver</a>
+								<a href="{{ path('app_product_index')}}" class="btn btn-outline-secondary btn-sm px-4 w-50 text-dark mt-2">Retour à la liste</a>
 							</div>
 						</div>
 					</div>

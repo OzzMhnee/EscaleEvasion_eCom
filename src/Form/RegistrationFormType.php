@@ -42,6 +42,7 @@ class RegistrationFormType extends AbstractType
                     'label' => 'Répéter le mot de passe',
                     'attr' => ['autocomplete' => 'new-password', 'class' => 'form-control'],
                 ],
+                'required' => true,
                 'invalid_message' => 'Les mots de passe doivent être identiques.',
                 'constraints' => [
                     new NotBlank([

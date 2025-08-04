@@ -34,9 +34,10 @@
             <li><a href="{{ path('app_sub_category_new')}}" class="dropdown-item">Ajouter une sous-categories</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a href="{{ path('app_product_index')}}" class="dropdown-item">Produits</a></li>
-            <li><a href="{{('app_product_new')}}" class="dropdown-item">Ajouter un produit</a></li>
+            <li><a href="{{ path('app_product_new') }}" class="dropdown-item">Ajouter un produit</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a href="{{ path('app_user')}}" class="dropdown-item">Utilisateurs</a></li>
+            <li><a href="{{ path('app_reservation_all_calendar')}}" class="dropdown-item">Historique des réservations</a></li>
           </ul>
         </li>
       {% endif %}

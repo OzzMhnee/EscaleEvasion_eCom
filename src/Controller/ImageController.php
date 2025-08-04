@@ -40,7 +40,7 @@ class ImageController extends AbstractController
         $watermarkText = 'Escale Evasion';
         $fontSize = 30;
         $angle = 0;
-        $fontFile = $this->getParameter('kernel.project_dir') . '/public/fonts/Roboto-Bold.ttf';
+        $fontFile = $this->getParameter('kernel.project_dir') . '/public/fonts/Italianno-Regular.ttf';
         if (!file_exists($fontFile)) {
             $fontFile = 'C:\Windows\Fonts\arial.ttf';
         }
@@ -57,8 +57,8 @@ class ImageController extends AbstractController
         $textHeight = $bbox[1] - $bbox[7];
 
         // Positionne le texte en bas à droite
-        $x = imagesx($image) - $textWidth - 40;
-        $y = imagesy($image) - 40;
+        $x = imagesx($image) - $textWidth - 340;
+        $y = imagesy($image) - 140;
 
         // Ajoute le texte
         imagettftext($image, $fontSize, $angle, $x, $y, $white, $fontFile, $watermarkText);

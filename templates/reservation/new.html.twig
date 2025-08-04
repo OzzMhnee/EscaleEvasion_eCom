@@ -67,17 +67,6 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         var reservedRanges = {{ reservedRanges|json_encode|raw }};
-        flatpickr("#reservation_startDate", {
-            disable: reservedRanges,
-            minDate: "today",
-            dateFormat: "Y-m-d"
-        });
-        flatpickr("#reservation_endDate", {
-            disable: reservedRanges,
-            minDate: "today",
-            dateFormat: "Y-m-d"
-        });
-
         // Calcul dynamique du prix du séjour
         function calcNightsAndPrice() {
             const startInput = document.getElementById('reservation_startDate');
@@ -90,7 +79,7 @@
             if (startInput.value && endInput.value) {
                 const start = new Date(startInput.value);
                 const end = new Date(endInput.value);
-                // Calcul du nombre de nuits (exclut la dernière nuit)
+                // Calcul du nombre de nuits (exclut la dernière "nuit"/journée)
                 nights = Math.round((end - start) / (1000 * 60 * 60 * 24));
                 if (nights > 0) {
                     total = nights * pricePerNight;
@@ -102,6 +91,20 @@
             nbNightsSpan.textContent = nights;
             totalPriceSpan.textContent = total + " €";
         }
+
+        flatpickr("#reservation_startDate", {
+            disable: reservedRanges,
+            minDate: "today",
+            dateFormat: "Y-m-d",
+            onChange: calcNightsAndPrice
+        });
+        flatpickr("#reservation_endDate", {
+            disable: reservedRanges,
+            minDate: "today",
+            dateFormat: "Y-m-d",
+            onChange: calcNightsAndPrice
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('reservation_startDate').addEventListener('change', calcNightsAndPrice);
             document.getElementById('reservation_endDate').addEventListener('change', calcNightsAndPrice);

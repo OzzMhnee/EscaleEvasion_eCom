@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendrier des réservations{% endblock %}
+
+{% block body %}
+    <style>
+        .parallax {
+			background-image: url('/protected-bg/backgroundParallax2.png');
+			min-height: 100vh;
+			width: 100%;
+			background-attachment: fixed;
+			background-position: center;
+			background-repeat: no-repeat;
+			filter: grayscale(0.4);
+			background-size: cover;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+    </style>
+    	<div class="parallax">
+		    <div class="container">
+			    <div class="row my-5 justify-content-center">
+                    <div class="card p-4 bg-light bg-opacity-50" style="max-width: 1200px;">
+                        <h1>Calendrier des réservations pour la Maison {{ product.name }}</h1>
+                        <ul>
+                            {% for reservation in reservations %}
+                                <li>
+                                    <strong>Réservation ID:</strong> {{ reservation.id }} -
+                                    <strong>Statut:</strong> {{ reservation.status }} -
+                                    <strong>réservation faîte le </strong> {{ reservation.createdAT|date('d/m/Y') }} <strong>pour un séjour du </strong> {{ reservation.startDate|date('d/m/Y') }}<strong> au </strong>{{ reservation.endDate|date('d/m/Y') }}
+                                    {% if reservation.user %}
+                                        (<strong>par</strong> {{ reservation.user.firstName }} {{ reservation.user.lastName }} - {{ reservation.user.email }})
+                                    {% endif %}
+                                </li>
+                            {% else %}
+                                <li>Aucune réservation pour ce produit.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>    
+                </div>
+            </div>
+        </div>
+{% endblock %}

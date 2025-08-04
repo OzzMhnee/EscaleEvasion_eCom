@@ -6,6 +6,7 @@ use App\Entity\Product;
 use App\Entity\Reservation;
 use App\Form\ReservationType;
 use App\Repository\ReservationRepository;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,6 +84,22 @@ class ReservationController extends AbstractController
         return $this->render('reservation/calendar.html.twig', [
             'product' => $product,
             'reservations' => $reservations,
+        ]);
+    }
+    #[Route('/products/calendar', name: 'app_reservation_all_calendar', methods: ['GET'])]
+    public function allCalendar(ReservationRepository $reservationRepository, ProductRepository $productRepository): Response
+    {
+        $reservations = $reservationRepository->findAll();
+        $products = $productRepository->findAll();
+        $AwaitingStatus = $reservationRepository->findBy(['status' => 'en attente']);
+        $ConfirmedStatus = $reservationRepository->findBy(['status' => 'confirmée']);
+        $CancelledStatus = $reservationRepository->findBy(['status' => 'annulée']);
+        return $this->render('reservation/all_calendar.html.twig', [
+            'reservations' => $reservations,
+            'products' => $products,
+            'AwaitingStatus' => $AwaitingStatus,
+            'ConfirmedStatus' => $ConfirmedStatus,
+            'CancelledStatus' => $CancelledStatus,
         ]);
     }
 }

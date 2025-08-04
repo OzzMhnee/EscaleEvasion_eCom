@@ -1,29 +1,46 @@
 {% extends 'base.html.twig' %}
 {% block title %}Mes réservations{% endblock %}
 {% block body %}
-<div class="container my-5">
-    <h2>Mes réservations</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Logement</th>
-                <th>Début</th>
-                <th>Fin</th>
-                <th>Statut</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for r in reservations %}
-                <tr>
-                    <td>{{ r.product.name }}</td>
-                    <td>{{ r.startDate|date('d/m/Y') }}</td>
-                    <td>{{ r.endDate|date('d/m/Y') }}</td>
-                    <td>{{ r.status }}</td>
-                </tr>
-            {% else %}
-                <tr><td colspan="4" class="text-center text-muted">Aucune réservation</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+    <style>
+        .parallax {
+            background-image: url('/protected-bg/backgroundParallax2.png');
+            height: 100vh;
+			width: 100%;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <div class="parallax  d-flex flex-column align-items-center ">
+        <div class="container my-5">
+            <h2>Mes réservations</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Logement</th>
+                        <th>Début</th>
+                        <th>Fin</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in reservations %}
+                        <tr>
+                            <td>{{ r.product.name }}</td>
+                            <td>{{ r.startDate|date('d/m/Y') }}</td>
+                            <td>{{ r.endDate|date('d/m/Y') }}</td>
+                            <td>{{ r.status }}</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="4" class="text-center text-muted">Aucune réservation</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}
