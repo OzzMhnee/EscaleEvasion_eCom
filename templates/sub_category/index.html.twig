@@ -36,11 +36,11 @@
 	<div class="parallax">
 		<div class="container ">
 			<div class="row my-5">
-				<div class="card p-4 bg-light bg-opacity-50">
+				<div class="card p-4 bg-light bg-opacity-50 d-flex flex-column align-items-center" style="max-width: 1000px;">
 					<h1>Liste des sous-catégories</h1>
 					<table class="table bg-light table-hover">
 						<thead>
-							<tr class="">
+							<tr>
 								<th scope="col">ID</th>
 								<th scope="col">Nom de la sous-catégorie</th>
 								<th scope="col">Liée à la catégorie :</th>
@@ -51,9 +51,9 @@
 							{% for sub_category in sub_categories %}
 								<tr>
 									<th scope="row">{{sub_category.id}}</th>
-									<td class="align-middle">{{sub_category.name}}</td>
-									<td class="align-middle">{{sub_category.category}}</td>
-									<td>
+									<td style="width: 350px;" class="align-middle">{{sub_category.name}}</td>
+									<td style="width: 250px;" class="align-middle">{{sub_category.category}}</td>
+									<td style="width: 250px;">
 										<a href="{{path('app_sub_category_edit', {'id': sub_category.id})}}" class="btn btn-outline-primary">Modifier</a>
 										<a onclick="return confirm('Voulez vous vraiment supprimer cette sous-catégorie ?')" href="{{path('app_sub_category_delete', {'id': sub_category.id})}}" class="btn btn-outline-danger">Supprimer</a>
 									</td>
@@ -62,8 +62,9 @@
 						</tbody>
 					</table>
 				</div>
-				{# <div class="border-top border-2 border-light"></div> #}
-				<a href="{{path('app_sub_category_new')}}" class="btn btn-light text-dark mt-3 col-3">Ajouter une nouvelle sous-catégorie</a>
+				<div class="d-flex justify-content-center">
+					<a href="{{path('app_sub_category_new')}}" class="btn btn-light text-dark mt-3 px-4">Ajouter une nouvelle sous-catégorie</a>
+				</div>
 			</div>
 		</div>
 	</div>

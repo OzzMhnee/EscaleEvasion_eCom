@@ -29,18 +29,20 @@
                                 <h2>Réservations concernant la maison : {{ product.name }}</h2>
                                 {% set productReservations = product.reservations|length %}
                                 {% if productReservations > 0 %}
-                                    Nombre de réservations dans l'historique complet: {{ product.reservations|length }}
+                                    Nombre de réservations dans l'historique complet: {{ productReservations }}
                                     <h3><strong>Statut: en attente</strong></h3>
                                     <h4><strong>Réservations en attente:</strong> {{ AwaitingStatus|length }}</h4>
-                                    {% for reservation in AwaitingStatus if reservation.product.id == product.id %}
-                                        <li>
-                                            <strong>Réservation ID:</strong> {{ reservation.id }} -
-                                            <strong>Statut:</strong> {{ reservation.status }} -
-                                            <strong>réservation faîte le </strong> {{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }} <strong>pour un séjour du </strong> {{ reservation.startDate|date('d/m/Y') }}<strong> au </strong>{{ reservation.endDate|date('d/m/Y') }}
-                                            {% if reservation.user %}
-                                                (<strong>par</strong> {{ reservation.user.firstName }} {{ reservation.user.lastName }} - {{ reservation.user.email }})
-                                            {% endif %}
-                                        </li>   
+                                    {% for reservation in AwaitingStatus %}
+                                        {% if reservation.product.id == product.id %}
+                                            <li>
+                                                <strong>Réservation ID:</strong> {{ reservation.id }} -
+                                                <strong>Statut:</strong> {{ reservation.status }} -
+                                                <strong>réservation faîte le </strong> {{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }} <strong>pour un séjour du </strong> {{ reservation.startDate|date('d/m/Y') }}<strong> au </strong>{{ reservation.endDate|date('d/m/Y') }}
+                                                {% if reservation.user %}
+                                                    (<strong>par</strong> {{ reservation.user.firstName }} {{ reservation.user.lastName }} - {{ reservation.user.email }})
+                                                {% endif %}
+                                            </li>
+                                        {% endif %}
                                     {% endfor %}
                                     <h3><strong>Statut: confirmée</strong></h3>
                                     <h4><strong>Réservations confirmées:</strong> {{ ConfirmedStatus|length }}</h4>
