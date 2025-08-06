@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: SubCategoryRepository::class)]
 class SubCategory
 {
+    //region Properties
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -27,12 +28,16 @@ class SubCategory
      */
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'subCategory')]
     private Collection $products;
+    //endregion
 
+    //region Constructor
     public function __construct()
     {
         $this->products = new ArrayCollection();
     }
+    //endregion
 
+    //region Getters and Setters
     public function getId(): ?int
     {
         return $this->id;
@@ -88,4 +93,5 @@ class SubCategory
 
         return $this;
     }
+    //endregion
 }

@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class CategoryController extends AbstractController
 {
+    //region Liste des catégories pour l'admin
     #[Route('/admin/category', name: 'app_category')]
     public function index(CategoryRepository $repo): Response
     {
@@ -22,7 +23,9 @@ final class CategoryController extends AbstractController
             'categories' => $categories
         ]);
     }
+    //endregion
 
+    //region ajout d'une catégorie Admin
     #[Route('admin/category/add', name: 'app_category_add')]
     public function addCategory(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -39,8 +42,9 @@ final class CategoryController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+    //endregion
 
-
+    //region Modification d'une catégorie Admin
     #[Route('admin/category/update/{id}', name: 'app_category_update')]
     public function editCategory(EntityManagerInterface $entityManager, Request $request, Category $category): Response
     {
@@ -58,9 +62,9 @@ final class CategoryController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+    //endregion
 
-
-
+    //region Suppression d'une catégorie Admin
     #[Route('admin/category/delete/{id}', name: 'app_category_delete')]
     public function deleteCategory(EntityManagerInterface $entityManager, $id, Request $request, Category $category): Response
     {
@@ -70,4 +74,5 @@ final class CategoryController extends AbstractController
         $this->addFlash("messages", 'La catégorie a été supprimée!');
         return $this->redirectToRoute("app_category");
     }
+    //endregion
 }

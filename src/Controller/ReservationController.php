@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('admin/reservation')]
 class ReservationController extends AbstractController
 {
+    //region Réservation d'un produit
     #[Route('/product/{id}', name: 'app_reservation_new', methods: ['GET', 'POST'])]
     public function new(
         Product $product,
@@ -35,7 +36,7 @@ class ReservationController extends AbstractController
         foreach ($existingReservations as $r) {
             $reservedRanges[] = [
                 'from' => $r->getStartDate()->format('Y-m-d'),
-                'to' => $r->getEndDate()->format('Y-m-d')
+                'to' => $r->getEndDate()->format('Y-m-d'),
             ];
         }
 
@@ -66,7 +67,7 @@ class ReservationController extends AbstractController
                 $entityManager->persist($reservation);
                 $entityManager->flush();
                 $this->addFlash('success', 'Réservation enregistrée !');
-                return $this->redirectToRoute('app_product_show', ['id' => $product->getId()]);
+                return $this->redirectToRoute('app_user_reservations', ['id' => $product->getId()]);
             }
         }
 
@@ -76,7 +77,9 @@ class ReservationController extends AbstractController
             'reservedRanges' => $reservedRanges,
         ]);
     }
+    //endregion
 
+    //region Liste des réservations d'un produit
     #[Route('/product/{id}/calendar', name: 'app_reservation_calendar', methods: ['GET'])]
     public function calendar(Product $product, ReservationRepository $reservationRepository): Response
     {
@@ -86,6 +89,9 @@ class ReservationController extends AbstractController
             'reservations' => $reservations,
         ]);
     }
+    //endregion
+
+    //region Liste de toutes les réservations
     #[Route('/products/calendar', name: 'app_reservation_all_calendar', methods: ['GET'])]
     public function allCalendar(ReservationRepository $reservationRepository, ProductRepository $productRepository): Response
     {
@@ -102,4 +108,29 @@ class ReservationController extends AbstractController
             'CancelledStatus' => $CancelledStatus,
         ]);
     }
+    //endregion
+
+    //region Annulation d'une réservation (admin ou super admin)
+    #[Route('/cancel/{id}', name: 'reservation_cancel', methods: ['GET', 'POST'])]
+    public function cancelReservation(int $id, ReservationRepository $reservationRepository, EntityManagerInterface $em, Request $request): Response
+    {
+        $reservation = $reservationRepository->find($id);
+        if (!$reservation) {
+            $this->addFlash('danger', 'Réservation introuvable.');
+            return $this->redirectToRoute('app_reservation_all_calendar');
+        }
+
+        // On ne peut annuler que les réservations "en attente" ou "confirmée"
+        if (!in_array($reservation->getStatus(), ['en attente', 'confirmée'])) {
+            $this->addFlash('danger', 'Seules les réservations en attente ou confirmées peuvent être annulées.');
+            return $this->redirectToRoute('app_reservation_all_calendar');
+        }
+
+        $reservation->setStatus('annulée');
+        $em->flush();
+
+        $this->addFlash('success', 'La réservation a bien été annulée.');
+        return $this->redirectToRoute('app_reservation_all_calendar');
+    }
+    //endregion
 }

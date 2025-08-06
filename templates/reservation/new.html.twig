@@ -8,21 +8,6 @@
 {% endblock %}
 
 {% block body %}
-    <style>
-        .parallax {
-            background-image: url('/protected-bg/backgroundParallax2.png');
-            min-height: 100vh;
-            width: 100%;
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
     <div class="parallax">
         <div class="container">
             <div class="row my-5 justify-content-center">
@@ -39,7 +24,7 @@
                             {{ form_widget(form.endDate, {'attr': {'class': 'form-control', 'autocomplete': 'off', 'id': 'reservation_endDate'}}) }}
                             {{ form_errors(form.endDate) }}
                         </div>
-<div class="mb-3 text-center">
+                        <div class="mb-3 text-center">
                             <span class="fw-bold">Prix par nuit :</span>
                             <span id="pricePerNight" class="text-primary">{{ product.price }} €</span>
                         </div>
@@ -66,7 +51,10 @@
     {{ parent() }}
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        // Les plages réservées sont transmises depuis le contrôleur sous la forme :
+        // [ {from: "2024-08-04", to: "2024-08-31"}, ... ]
         var reservedRanges = {{ reservedRanges|json_encode|raw }};
+
         // Calcul dynamique du prix du séjour
         function calcNightsAndPrice() {
             const startInput = document.getElementById('reservation_startDate');
@@ -79,7 +67,6 @@
             if (startInput.value && endInput.value) {
                 const start = new Date(startInput.value);
                 const end = new Date(endInput.value);
-                // Calcul du nombre de nuits (exclut la dernière "nuit"/journée)
                 nights = Math.round((end - start) / (1000 * 60 * 60 * 24));
                 if (nights > 0) {
                     total = nights * pricePerNight;
@@ -92,14 +79,19 @@
             totalPriceSpan.textContent = total + " €";
         }
 
+        // Flatpickr : désactive toutes les dates réservées (toutes les dates dans chaque plage)
         flatpickr("#reservation_startDate", {
-            disable: reservedRanges,
+            disable: reservedRanges.map(function(range) {
+                return { from: range.from, to: range.to };
+            }),
             minDate: "today",
             dateFormat: "Y-m-d",
             onChange: calcNightsAndPrice
         });
         flatpickr("#reservation_endDate", {
-            disable: reservedRanges,
+            disable: reservedRanges.map(function(range) {
+                return { from: range.from, to: range.to };
+            }),
             minDate: "today",
             dateFormat: "Y-m-d",
             onChange: calcNightsAndPrice

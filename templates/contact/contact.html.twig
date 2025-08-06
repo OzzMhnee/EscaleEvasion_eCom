@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact plateforme{% endblock %}
+
+{% block body %}
+    <div class="parallax">
+        <div class="container my-5">
+            <div class="card p-4 bg-light bg-opacity-50" style="max-width: 600px; margin: 0 auto;">
+                <h2 class="mb-4 text-center">Contacter la plateforme</h2>
+                {% if product %}
+                    <div class="alert alert-info">
+                        Vous posez une question à propos du logement {{ product.name }}.
+                    </div>
+                {% endif %}
+                {{ form_start(form) }}
+                    {{ form_row(form.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Votre prénom'}}) }}
+                    {{ form_row(form.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Votre nom'}}) }}
+                    {{ form_row(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Votre email'}}) }}
+                    {{ form_row(form.message, {'attr': {'class': 'form-control', 'placeholder': 'Votre message'}}) }}
+                    <button type="submit" class="btn btn-dark w-100">Envoyer</button>
+                {{ form_end(form) }}
+                <a href="{{ app.request.headers.get('referer') ?: path('app_user_all_products') }}" class="btn btn-light text-dark w-100 mt-3">Retour</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

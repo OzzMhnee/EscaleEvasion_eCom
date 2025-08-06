@@ -136,6 +136,9 @@ class ProductType extends AbstractType
                 'class' => SubCategory::class,
                 'choice_label' => 'name',
                 'multiple' => true,
+                'group_by' => function ($subCategory) {
+                    return $subCategory->getCategory() ? $subCategory->getCategory()->getName() : 'Autres';
+                },
             ])
         ;
     }

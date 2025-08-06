@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier{% endblock %}
+
+{% block body %}
+    <div class="parallax">
+        <div class="container my-5">
+            <div class="card p-4 bg-light bg-opacity-50" style="max-width: 1300px; margin: 0 auto;">
+                <h2 class="mb-4 text-center">Mon panier</h2>
+                {% if pendingReservations|length > 0 %}
+                    <table class="table table-hover bg-light">
+                        <thead>
+                            <tr>
+                                <th>Logement</th>
+                                <th>Date de début</th>
+                                <th>Date de fin</th>
+                                <th>Statut</th>
+                                <th>Prix par nuit</th>
+                                <th>Nombre de nuits</th>
+                                <th>Prix du séjour</th>
+                                <th>Acompte (10%)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reservation in pendingReservations %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ path('app_user_product', {'id': reservation.product.id}) }}" class="fw-bold text-dark">
+                                            {{ reservation.product.name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ reservation.startDate|date('d/m/Y') }}</td>
+                                    <td>{{ reservation.endDate|date('d/m/Y') }}</td>
+                                    <td>
+                                        {% if reservation.status == 'en attente' %}
+                                            <span class="badge bg-warning text-dark">En attente</span>
+                                        {% elseif reservation.status == 'confirmée' %}
+                                            <span class="badge bg-success">Confirmée</span>
+                                        {% elseif reservation.status == 'annulée' %}
+                                            <span class="badge bg-danger">Annulée</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ reservation.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ reservation.product.price }} €</td>
+                                    <td>
+                                        {% set nights = (reservation.endDate|date('U') - reservation.startDate|date('U')) // 86400 %}
+                                        {{ nights }} 
+                                    </td>
+                                    <td>
+                                        {% set totalPrice = reservation.product.price * nights %}
+                                        {{ totalPrice }} €
+                                    </td>
+                                    <td>
+                                        {% set acompte = (totalPrice * 0.10)|round(2, 'floor') %}
+                                        {{ acompte }} €
+                                    </td>
+                                    <td>
+                                        <form method="post" action="{{ path('app_cart_remove', {'id': reservation.id}) }}" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment annuler cette réservation ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('remove' ~ reservation.id) }}">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm ms-1">Annuler</button>
+                                        </form>
+                                        <form method="post" action="#" style="display:inline;">
+                                            <button type="submit" class="btn btn-outline-success btn-sm ms-1" disabled title="Simulation">Verser l'acompte</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <form method="post" action="{{ path('app_cart_clear') }}">
+                        <button type="submit" class="btn btn-light btn-outline-danger w-50 ms-auto d-block">Vider le panier</button>
+                    </form>
+                {% else %}
+                    <div class="alert alert-info text-center mb-0">
+                        Votre panier est vide.<br>
+                        <a href="{{ path('app_user_all_products') }}" class="btn btn-dark mt-3">Voir les logements</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

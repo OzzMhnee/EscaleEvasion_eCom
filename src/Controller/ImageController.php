@@ -8,10 +8,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ImageController extends AbstractController
 {
+    // Route pour afficher une image protégée avec un filigrane
     #[Route('/protected-bg/{filename}', name: 'protected_bg')]
     public function protectedBg(string $filename): Response
     {
-        // Vérifie les droits d'accès ici (exemple : utilisateur connecté)
+        // Option pour vérifier les droits d'accès ici (exemple : utilisateur connecté)
         // if (!$this->getUser()) {
         //     throw $this->createAccessDeniedException('Vous devez être connecté pour voir cette image.');
         // }
@@ -75,6 +76,9 @@ class ImageController extends AbstractController
             'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
         ]);
     }
+    //endregion
+
+    //region Route pour afficher une image protégée sans filigrane
      #[Route('/protected-img/{filename}', name: 'protected_img')]
     public function protectedImg(string $filename): Response
     {
@@ -111,4 +115,5 @@ class ImageController extends AbstractController
             'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
         ]);
     }
+    //endregion
 }

@@ -16,6 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 final class SubCategoryController extends AbstractController
 {
+    //region Liste des sous-catégories
     #[Route(name: 'app_sub_category_index', methods: ['GET'])]
     public function index(SubCategoryRepository $subCategoryRepository): Response
     {
@@ -23,7 +24,9 @@ final class SubCategoryController extends AbstractController
             'sub_categories' => $subCategoryRepository->findAll(),
         ]);
     }
+    //endregion
 
+    //region Ajout d'une sous-catégorie
     #[Route('/new', name: 'app_sub_category_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -43,7 +46,9 @@ final class SubCategoryController extends AbstractController
             'form' => $form,
         ]);
     }
+    //endregion
 
+    //region fiche d'une sous-catégorie
     #[Route('/{id}', name: 'app_sub_category_show', methods: ['GET'])]
     public function show(SubCategory $subCategory): Response
     {
@@ -51,7 +56,9 @@ final class SubCategoryController extends AbstractController
             'sub_category' => $subCategory,
         ]);
     }
+    //endregion
 
+    //region Modification d'une sous-catégorie
     #[Route('/{id}/edit', name: 'app_sub_category_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, SubCategory $subCategory, EntityManagerInterface $entityManager): Response
     {
@@ -69,7 +76,9 @@ final class SubCategoryController extends AbstractController
             'form' => $form,
         ]);
     }
+    //endregion
 
+    //region Suppression d'une sous-catégorie
     #[Route('/{id}', name: 'app_sub_category_delete', methods: ['POST'])]
     public function delete(Request $request, SubCategory $subCategory, EntityManagerInterface $entityManager): Response
     {
@@ -80,4 +89,5 @@ final class SubCategoryController extends AbstractController
         $this->addFlash('success', 'Sous-catégorie supprimée avec succès !');
         return $this->redirectToRoute('app_sub_category_index', [], Response::HTTP_SEE_OTHER);
     }
+    //endregion
 }

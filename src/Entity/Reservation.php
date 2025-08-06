@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
 {
+    //region Properties
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -32,9 +33,9 @@ class Reservation
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
+    //endregion
 
-
-
+    //region Getters and Setters
     public function getId(): ?int
     {
         return $this->id;
@@ -110,4 +111,5 @@ class Reservation
 
         return $this;
     }
+    //endregion
 }

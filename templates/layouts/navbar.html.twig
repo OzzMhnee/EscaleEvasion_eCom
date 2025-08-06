@@ -12,13 +12,17 @@
       {% set categories = all_categories() %}
       {% if categories|length > 0 %}
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Catégories
-          </a>
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Catégories</a>
           <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ path('app_user_all_products') }}">Toutes les catégories</a></li>
             {% for category in categories %}
-              <li><a class="dropdown-item text-primary categoryTitle" href="#">{{ category.name }}</a></li>
-              <li><hr class="dropdown-divider"></li> 
+              {% if category.subCategories|length > 0 %}               
+                <hr class="dropdown-divider">
+                <li><a class="dropdown-item text-dark categoryTitle" href="{{ path('app_user_category_products', {id: category.id}) }}">{{ category.name }}</a></li>
+                {% for subCategory in category.subCategories %}
+                <li><a class="dropdown-item text-secondary" href="{{ path('app_user_sub_category_products', {id: subCategory.id}) }}">    {{ subCategory.name }}</a></li>         
+                {% endfor %}
+              {% endif %}
             {% endfor %}
           </ul>
         </li>
@@ -41,44 +45,36 @@
           </ul>
         </li>
       {% endif %}
-        {# <li class="nav-item">
-          <a class="nav-link" href="{{ path('app_category') }}">Catégories</a>
-        </li>
-      </ul>
-      <ul class="navbar-nav mb-2 mb-lg-0"> #}
-        {# <li class="nav-item me-2">
-          <a class="nav-link position-relative" href="{{ path('app_cart') }}">
-            <i class="bi bi-cart"></i> Panier
-            {# Affiche le nombre d'articles dans le panier si disponible #}
-            {# {% if app.session.get('cart_count') %}
-              <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">
-                {{ app.session.get('cart_count') }}
-              </span>
-            {% endif %}
-          </a>
-        </li> #}
       </ul>
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item me-2">
+          <a class="nav-link position-relative d-flex align-items-center" href="{{ path('app_cart') }}" title="Voir mon panier">
+            {% set cartCount = 0 %}
+            {% if app.session and app.user %}
+              {% set cartCount = app.session.get('cart_count', 0) %}
+            {% endif %}
+            <span class="badge rounded-pill bg-danger" style="font-size:0.85rem; min-width:1.5em;">
+              {{ cartCount }}
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+              <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 14H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zm3.14 4l1.25 6.5h7.22l1.25-6.5H3.14zM5.5 16a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm7 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+            </svg>
+          </a>
+        </li>
         <form class="d-flex" role="search">
           <input type="search" class="form-control me-2" placeholder="Rechercher un produit" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Rechercher</button>
         </form>
         {% if app.user %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Mon compte
-            </a>
+            <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Mon compte</a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
-              <li>
-                <a class="dropdown-item" href="{{ path('app_user_profile') }}">Mon profil</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="{{ path('app_user_reservations') }}">Mes réservations</a>
-              </li>
+              <li><a class="dropdown-item" href="{{ path('app_user_profile') }}">Mon profil</a></li>
+              <li><a class="dropdown-item" href="{{ path('app_user_reservations') }}">Mes réservations</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li>
-                <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Me déconnecter</a>
-              </li>
+              <li><a class="dropdown-item" href="{{ path('app_contact', {'id': app.user.id})}}">Nous contacter</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Me déconnecter</a></li>
             </ul>
           </li>
         {% else %}

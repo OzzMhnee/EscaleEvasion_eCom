@@ -9,6 +9,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
+    //region Page de connexion
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -23,11 +24,14 @@ class SecurityController extends AbstractController
             'error' => $error,
         ]);
     }
+    //endregion
 
+    //region Déconnexion
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
         $this->addFlash('success', 'Vous avez été déconnecté avec succès.');
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+    //endregion
 }

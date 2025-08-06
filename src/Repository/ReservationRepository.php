@@ -9,6 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Reservation>
  */
+
 class ReservationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,28 +17,20 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
-    //    /**
-    //     * @return Reservation[] Returns an array of Reservation objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Reservation
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Annule toutes les réservations "en attente" créées il y a plus de 24h.
+     * Retourne le nombre de réservations annulées.
+     */
+    public function cancelExpiredPendingReservations(): int
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->update()
+            ->set('r.status', ':cancelled')
+            ->where('r.status = :pending')
+            ->andWhere('r.createdAt <= :expiredAt')
+            ->setParameter('cancelled', 'annulée')
+            ->setParameter('pending', 'en attente')
+            ->setParameter('expiredAt', new \DateTimeImmutable('-24 hours'));
+        return $qb->getQuery()->execute();
+    }
 }

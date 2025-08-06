@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/product')]
 final class ProductController extends AbstractController
 {
+    //region Liste des produits
     #[Route(name: 'app_product_index', methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
@@ -21,7 +22,9 @@ final class ProductController extends AbstractController
             'products' => $productRepository->findAll(),
         ]);
     }
+    //endregion
 
+    //region Ajout d'un produit
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -94,7 +97,9 @@ final class ProductController extends AbstractController
             'form' => $form,
         ]);
     }
+    //endregion
 
+    //region Affichage d'un produit
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
     public function show(Product $product): Response
     {
@@ -102,7 +107,9 @@ final class ProductController extends AbstractController
             'product' => $product,
         ]);
     }
+    //endregion
 
+    //region Modification d'un produit
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
@@ -177,7 +184,9 @@ final class ProductController extends AbstractController
             'form' => $form,
         ]);
     }
+    //endregion
 
+    //region Suppression d'un produit
     #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
@@ -188,6 +197,5 @@ final class ProductController extends AbstractController
         $this->addFlash('success', 'Produit supprimé avec succès !');
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
     }
-
-
+    //endregion
 }

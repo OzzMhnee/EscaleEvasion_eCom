@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class RegistrationController extends AbstractController
 {
+    //region Enregistrement d'un nouvel utilisateur
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
     {
@@ -39,4 +40,5 @@ class RegistrationController extends AbstractController
             'registrationForm' => $form,
         ]);
     }
+    //endregion
 }

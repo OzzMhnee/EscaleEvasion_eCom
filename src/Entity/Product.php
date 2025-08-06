@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
 {
+    //region Properties
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -93,15 +94,18 @@ class Product
      */
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'product')]
     private Collection $reservations;
+    //endregion
 
+    //region Constructor
     public function __construct()
     {
         $this->subCategory = new ArrayCollection();
         $this->reservations = new ArrayCollection();
         
     }
+    //endregion
 
-
+    //region Getters and Setters
     public function getId(): ?int
     {
         return $this->id;
@@ -424,4 +428,5 @@ class Product
 
         return $this;
     }
+    //endregion
 }
