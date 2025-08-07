@@ -5,6 +5,14 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        .flatpickr-day.disabled, .flatpickr-day.disabled:hover {
+            background: #e0e0e0 !important;
+            color: #b0b0b0 !important;
+            text-decoration: line-through;
+            cursor: not-allowed;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -79,27 +87,35 @@
             totalPriceSpan.textContent = total + " €";
         }
 
-        // Flatpickr : désactive toutes les dates réservées (toutes les dates dans chaque plage)
-        flatpickr("#reservation_startDate", {
-            disable: reservedRanges.map(function(range) {
-                return { from: range.from, to: range.to };
-            }),
-            minDate: "today",
-            dateFormat: "Y-m-d",
-            onChange: calcNightsAndPrice
-        });
-        flatpickr("#reservation_endDate", {
-            disable: reservedRanges.map(function(range) {
-                return { from: range.from, to: range.to };
-            }),
-            minDate: "today",
-            dateFormat: "Y-m-d",
-            onChange: calcNightsAndPrice
-        });
+        function initFlatpickr() {
+            if (typeof flatpickr === 'undefined') {
+                console.error('Flatpickr n\'est pas chargé !');
+                return;
+            }
+            flatpickr("#reservation_startDate", {
+                disable: reservedRanges.map(function(range) {
+                    return { from: range.from, to: range.to };
+                }),
+                minDate: "today",
+                dateFormat: "Y-m-d",
+                onChange: calcNightsAndPrice
+            });
+            flatpickr("#reservation_endDate", {
+                disable: reservedRanges.map(function(range) {
+                    return { from: range.from, to: range.to };
+                }),
+                minDate: "today",
+                dateFormat: "Y-m-d",
+                onChange: calcNightsAndPrice
+            });
 
-        document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('reservation_startDate').addEventListener('change', calcNightsAndPrice);
             document.getElementById('reservation_endDate').addEventListener('change', calcNightsAndPrice);
-        });
+        }
+
+        document.addEventListener('turbo:load', initFlatpickr);
+        document.addEventListener('DOMContentLoaded', initFlatpickr);
+
+        console.log('Plages désactivées pour Flatpickr:', reservedRanges);
     </script>
 {% endblock %}

@@ -157,7 +157,7 @@
 									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
 									<button class="btn btn-danger btn-sm px-4 w-50 mt-2" type="submit">Supprimer</button>
 								</form>
-								<a href="{{ path('app_reservation_new', {'id': product.id}) }}" class="btn btn-primary btn-sm px-4 w-50 text-dark mt-2">Réserver</a>
+								<a href="{{ path('app_reservation_new_user', {'id': product.id}) }}" class="btn btn-primary btn-sm px-4 w-50 text-dark mt-2">Réserver</a>
 								<a href="{{ path('app_product_index')}}" class="btn btn-outline-secondary btn-sm px-4 w-50 text-dark mt-2">Retour à la liste</a>
 							</div>
 						</div>

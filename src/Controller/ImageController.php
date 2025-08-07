@@ -58,8 +58,8 @@ class ImageController extends AbstractController
         $textHeight = $bbox[1] - $bbox[7];
 
         // Calcule des marges proportionnelles à la taille de l'image (5% de la largeur et de la hauteur)
-        $marginX = (int)(imagesx($image) * 0.2);
-        $marginY = (int)(imagesy($image) * 0.2);
+        $marginX = (int)(imagesx($image) * 0.22);
+        $marginY = (int)(imagesy($image) * 0.15);
 
         // Positionne le texte en bas à droite avec des marges dynamiques
         $x = imagesx($image) - $textWidth - $marginX;

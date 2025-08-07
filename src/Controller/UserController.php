@@ -25,11 +25,10 @@ final class UserController extends AbstractController
     #[Route('/admin/user', name: 'app_user')]
     public function displayAllUsers(UserRepository $repo): Response
     {
-        
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
             'users' => $repo->findAll(),
-        ]);
+        ]); 
     }
     //endregion
 
@@ -229,7 +228,9 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
 
         // Récupère les réservations existantes pour désactiver les dates déjà prises
-        $existingReservations = $reservationRepository->findBy(['product' => $product]);
+        $existingReservations = $reservationRepository->findBy([
+            'product' => $product,
+            'status' => ['en attente', 'confirmée']]);
         $reservedRanges = [];
         foreach ($existingReservations as $r) {
             $reservedRanges[] = [
@@ -237,6 +238,8 @@ final class UserController extends AbstractController
                 'to' => $r->getEndDate()->format('Y-m-d'),
             ];
         }
+        // // Debugging: Check reserved ranges
+        // dd($reservedRanges);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Vérification côté serveur : aucune réservation ne doit chevaucher
@@ -246,9 +249,11 @@ final class UserController extends AbstractController
                 ->andWhere('r.product = :product')
                 ->andWhere('r.startDate < :end')
                 ->andWhere('r.endDate > :start')
+                ->andWhere('r.status IN (:statuses)')
                 ->setParameter('product', $product)
                 ->setParameter('start', $start)
                 ->setParameter('end', $end)
+                ->setParameter('statuses', ['en attente', 'confirmée'])
                 ->getQuery()
                 ->getResult();
 
@@ -265,7 +270,7 @@ final class UserController extends AbstractController
                 $entityManager->persist($reservation);
                 $entityManager->flush();
                 $this->addFlash('success', 'Réservation enregistrée !');
-                return $this->redirectToRoute('app_user_reservations');
+                return $this->redirectToRoute('app_cart');
             }
         }
 
