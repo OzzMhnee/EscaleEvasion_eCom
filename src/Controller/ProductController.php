@@ -84,7 +84,6 @@ final class ProductController extends AbstractController
                 $product->setImage5($newFilename5);
             }
 
-            $entityManager->persist($product);
             $entityManager->flush();
 
             $this->addFlash('success', 'Produit ajouté avec succès !');

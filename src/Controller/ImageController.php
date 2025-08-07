@@ -19,8 +19,8 @@ class ImageController extends AbstractController
 
         $imagePath = $this->getParameter('kernel.project_dir') . '/private/img/' . $filename;
 
-        if (!file_exists($imagePath)) {
-            throw $this->createNotFoundException('Image non trouvée');
+        if (false === @getimagesize($imagePath)) {
+            throw $this->createNotFoundException('Fichier non reconnu comme une image valide');
         }
 
          // Détecte le type d'image
@@ -57,9 +57,13 @@ class ImageController extends AbstractController
         $textWidth = $bbox[2] - $bbox[0];
         $textHeight = $bbox[1] - $bbox[7];
 
-        // Positionne le texte en bas à droite
-        $x = imagesx($image) - $textWidth - 340;
-        $y = imagesy($image) - 140;
+        // Calcule des marges proportionnelles à la taille de l'image (5% de la largeur et de la hauteur)
+        $marginX = (int)(imagesx($image) * 0.2);
+        $marginY = (int)(imagesy($image) * 0.2);
+
+        // Positionne le texte en bas à droite avec des marges dynamiques
+        $x = imagesx($image) - $textWidth - $marginX;
+        $y = imagesy($image) - $marginY;
 
         // Ajoute le texte
         imagettftext($image, $fontSize, $angle, $x, $y, $white, $fontFile, $watermarkText);

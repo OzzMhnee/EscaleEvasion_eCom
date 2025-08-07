@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conditions Générales de Vente{% endblock %}
+
+{% block body %}
+    <div class="parallax">
+        <div class="container my-5">
+            <div class="card p-4 bg-light bg-opacity-50" style="max-width: 900px; margin: 0 auto;">
+                <h2 class="mb-4 text-center">Conditions Générales de Vente</h2>
+                <p>
+                    <strong>1. Objet</strong><br>
+                    Les présentes conditions générales de vente (CGV) régissent les relations contractuelles entre Escale Evasion et toute personne souhaitant effectuer une réservation sur le site.
+                </p>
+                <p>
+                    <strong>2. Réservation</strong><br>
+                    Toute réservation implique l’acceptation sans réserve des présentes CGV. La réservation devient effective après le versement de l’acompte et la confirmation par Escale Evasion.
+                </p>
+                <p>
+                    <strong>3. Paiement</strong><br>
+                    Un acompte de 10% du montant du séjour est exigé pour valider la réservation. Le solde est à régler selon les modalités précisées lors de la confirmation.
+                </p>
+                <p>
+                    <strong>4. Annulation</strong><br>
+                    Toute annulation doit être notifiée par écrit. Les conditions d’annulation et de remboursement sont précisées lors de la réservation.
+                </p>
+                <p>
+                    <strong>5. Responsabilité</strong><br>
+                    Escale Evasion ne saurait être tenue responsable en cas de force majeure ou d’événements indépendants de sa volonté.
+                </p>
+                <p>
+                    <strong>6. Données personnelles</strong><br>
+                    Les données collectées sont traitées conformément au RGPD. Vous disposez d’un droit d’accès, de rectification et de suppression de vos données.
+                </p>
+                <p>
+                    <strong>7. Propriété intellectuelle</strong><br>
+                    Toute reproduction ou utilisation des images et contenus du site sans autorisation écrite est strictement interdite.
+                </p>
+                <p>
+                    <strong>8. Litiges</strong><br>
+                    En cas de litige, une solution amiable sera recherchée. À défaut, le tribunal compétent sera celui du siège social d’Escale Evasion.
+                </p>
+                <hr>
+                <div class="text-center">
+                    <a href="{{ path('app_home_page') }}" class="btn btn-dark mt-3">Retour à l'accueil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,7 +1,7 @@
 <footer class="bg-dark text-light pt-4 pb-2 border-top border-2 border-secondary shadow" style="font-family: 'Segoe UI', Arial, sans-serif; margin-bottom: 0 !important;">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-3">
                 <h5 class="fw-bold text-uppercase">Mentions légales</h5>
                 <ul class="list-unstyled small mb-0">
                     <li>© {{ "now"|date("Y") }} Escale Evasion. Tous droits réservés.</li>
@@ -10,7 +10,7 @@
                     <li>Adresse : 123 rue de la Plage, 34000 Montpellier</li>
                 </ul>
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-3">
                 <h5 class="fw-bold text-uppercase">RGPD &amp; Confidentialité</h5>
                 <ul class="list-unstyled small mb-0">
                     <li>Vos données personnelles sont traitées conformément au RGPD.</li>
@@ -18,12 +18,21 @@
                     <li>Pour toute demande de suppression ou modification de vos données, contactez-nous.</li>
                 </ul>
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-3">
                 <h5 class="fw-bold text-uppercase">Contact</h5>
                 <ul class="list-unstyled small mb-0">
                     <li>Email : <a href="mailto:contact@escaleevasion.fr" class="text-light text-decoration-underline">contact@escaleevasion.fr</a></li>
                     <li>Téléphone : 01 ## ## ## ##</li>
                     <li><a href="{{ path('app_contact') }}" class="text-light text-decoration-underline">Formulaire de contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 mb-3">
+                <h5 class="fw-bold text-uppercase">Conditions Générales de Vente</h5>
+                <ul class="list-unstyled small mb-0">
+                    <li>
+                        <a href="{{ path('app_cgv') }}" class="text-light text-decoration-underline">Lire les CGV</a>
+                    </li>
+                    <li>En réservant, vous acceptez nos conditions générales de vente.</li>
                 </ul>
             </div>
         </div>

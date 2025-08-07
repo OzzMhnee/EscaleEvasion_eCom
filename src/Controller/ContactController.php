@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ContactController extends AbstractController
 {
+    //region Formulaire de contact
     #[Route('/contact', name: 'app_contact')]
     public function contact(Request $request, ProductRepository $productRepository, UserRepository $userRepository, EntityManagerInterface $em): Response
     {
@@ -35,12 +36,12 @@ class ContactController extends AbstractController
             $contactMessage->setProductId($product->getId());
             $contactMessage->setProductName($product->getName());
         }
-        $contactMessage->setCreatedAt(new \DateTimeImmutable());
-
+        
         $form = $this->createForm(ContactMessageType::class, $contactMessage);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $contactMessage->setCreatedAt(new \DateTimeImmutable());
             $em->persist($contactMessage);
             $em->flush();
             $this->addFlash('success', 'Votre message a bien été envoyé !');
@@ -59,4 +60,5 @@ class ContactController extends AbstractController
             'userData' => $userData,
         ]);
     }
+    //endregion
 }

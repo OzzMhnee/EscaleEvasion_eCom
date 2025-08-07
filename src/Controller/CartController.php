@@ -105,7 +105,7 @@ class CartController extends AbstractController
 
         // Retirer l'ID de la session "cart"
         $cart = $session->get('cart', []);
-        $cart = array_filter($cart, fn($rid) => $rid != $id);
+        $cart = array_filter($cart, fn($rid) => $rid !== $id);
         $session->set('cart', $cart);
 
         $this->addFlash('success', 'La réservation a été annulée et retirée du panier.');
@@ -124,12 +124,16 @@ class CartController extends AbstractController
             'status' => 'en attente'
         ]);
 
-        // Mettre à jour le statut de chaque réservation à "annulée"
-        foreach ($pendingReservations as $reservation) {
-            $reservation->setStatus('annulée');
-            $em->persist($reservation);
-        }
-        $em->flush();
+        // // Mettre à jour le statut de chaque réservation à "annulée"
+        // foreach ($pendingReservations as $reservation) {
+        //     $reservation->setStatus('annulée');
+        //     $em->persist($reservation);
+        // }
+        // $em->flush();
+        //////////////////// Partie commentée car nous avons déjà une commande pour annuler les réservations expirées
+        //////////////////// faire :  php bin/console app:cancel-expired-reservations
+        //////////////////// Il va falloir lancer cette commande régulièrement (cron job ou scheduler) pour annuler les réservations expirées
+        ///// cf fichier src/Command/CancelExpiredReservationsCommand.php
 
         // Vider le panier dans la session
         $session->remove('cart');

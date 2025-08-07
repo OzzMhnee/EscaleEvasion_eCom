@@ -66,7 +66,7 @@ final class CategoryController extends AbstractController
 
     //region Suppression d'une catégorie Admin
     #[Route('admin/category/delete/{id}', name: 'app_category_delete')]
-    public function deleteCategory(EntityManagerInterface $entityManager, $id, Request $request, Category $category): Response
+    public function deleteCategory(EntityManagerInterface $entityManager, Request $request, Category $category): Response
     {
         // $category = $entityManager->getRepository(Category::class)->find($id);
         $entityManager->remove($category);

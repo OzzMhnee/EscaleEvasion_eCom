@@ -15,4 +15,11 @@ final class HomePageController extends AbstractController
             'controller_name' => 'HomePageController',
         ]);
     }
+
+    //region Affichage des conditions générales de vente (CGV)
+    #[Route('/cgv', name: 'app_cgv')]
+    public function cgv(): Response
+    {
+        return $this->render('legal/cgv.html.twig');
+    }
 }
