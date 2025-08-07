@@ -17,8 +17,18 @@ class ImageController extends AbstractController
         //     throw $this->createAccessDeniedException('Vous devez être connecté pour voir cette image.');
         // }
 
+        // Option pour vérifier les droits d'accès ici (exemple : utilisateur connecté)
+        // if (!$this->getUser()) {
+        //     throw $this->createAccessDeniedException('Vous devez être connecté pour voir cette image.');
+        // }
+
+        // Correction : initialisation de $imagePath
         $imagePath = $this->getParameter('kernel.project_dir') . '/private/img/' . $filename;
 
+        if (!file_exists($imagePath)) {
+            // Affiche une image par défaut si le fichier n'existe pas
+            $imagePath = $this->getParameter('kernel.project_dir') . '/public/img/default-bg.png';
+        }
         if (false === @getimagesize($imagePath)) {
             throw $this->createNotFoundException('Fichier non reconnu comme une image valide');
         }
