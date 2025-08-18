@@ -135,7 +135,7 @@ final class UserController extends AbstractController
         $pagination = $paginator->paginate(  // Utilise le service KnpPaginator pour paginer la requête.
             $query, // Passe la requête Doctrine (pas le résultat, mais bien la requête elle-même)
             $request->query->getInt('page', 1), // Récupère le numéro de page dans l’URL (?page=2), ou 1 par défaut.
-            4 // Définit le nombre de produits à afficher par page (ici 6).
+            4 // Définit le nombre de produits à afficher par page (ici 4).
         );
 
         return $this->render('user/all-products.html.twig', [

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -39,6 +41,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $last_name = null;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'cancelled_by')]
+    private Collection $reservations;
+
+    /**
+     * @var Collection<int, ContactMessage>
+     */
+    #[ORM\OneToMany(targetEntity: ContactMessage::class, mappedBy: 'answered_by')]
+    private Collection $contactMessages;
+
+    public function __construct()
+    {
+        $this->reservations = new ArrayCollection();
+        $this->contactMessages = new ArrayCollection();
+    }
     //endregion
 
     //region Getters and Setters
@@ -147,4 +167,64 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
     //endregion
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setCancelledBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getCancelledBy() === $this) {
+                $reservation->setCancelledBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ContactMessage>
+     */
+    public function getContactMessages(): Collection
+    {
+        return $this->contactMessages;
+    }
+
+    public function addContactMessage(ContactMessage $contactMessage): static
+    {
+        if (!$this->contactMessages->contains($contactMessage)) {
+            $this->contactMessages->add($contactMessage);
+            $contactMessage->setAnsweredBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContactMessage(ContactMessage $contactMessage): static
+    {
+        if ($this->contactMessages->removeElement($contactMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($contactMessage->getAnsweredBy() === $this) {
+                $contactMessage->setAnsweredBy(null);
+            }
+        }
+
+        return $this;
+    }
 }

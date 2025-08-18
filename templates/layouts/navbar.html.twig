@@ -53,10 +53,10 @@
             {% if app.session and app.user %}
               {% set unreadMessagesCount = app.session.get('unread_messages_count', 0) %}
             {% endif %}
-            <span class="badge rounded-pill bg-danger" style="font-size:0.85rem; min-width:1.5em;">
+            <span class="badge rounded-pill bg-danger me-2" style="font-size:0.85rem; min-width:1.5em;">
               {{ unreadMessagesCount }}
             </span>
-            <img src="/img/new-messages.png" alt="cart" width="30" height="30" class="d-inline-block align-text-top">
+            {# <img src="/img/new-messages.png" alt="cart" width="30" height="30" class="d-inline-block align-text-top"> #}
             <img src="/img/no-messages.png" alt="cart" width="30" height="30" class="d-inline-block align-text-top">
           </a>
         </li>

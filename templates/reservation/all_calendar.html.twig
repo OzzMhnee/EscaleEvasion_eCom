@@ -9,17 +9,23 @@
                 <div class="card p-4 bg-light bg-opacity-50" style="max-width: 1200px;">
                     <h1>Historique des réservations</h1>        
                     <div class="accordion" id="accordionProducts">
-                        {% for product in products %}
+                        {% for product in pagination %}
                             {% set awaitingCount = 0 %}
                             {% set confirmedCount = 0 %}
                             {% set cancelledCount = 0 %}
+                            {% set finalisedCount = 0 %}
+                            {% for reservation in FinalisedStatus %}
+                                {% if reservation.product.id == product.id %}
+                                    {% set finalisedCount = finalisedCount + 1 %}
+                                {% endif %}
+                            {% endfor %}
                             {% for reservation in AwaitingStatus %}
                                 {% if reservation.product.id == product.id %}
                                     {% set awaitingCount = awaitingCount + 1 %}
                                 {% endif %}
                             {% endfor %}
                             {% for reservation in ConfirmedStatus %}
-                                {% if reservation.product.id == product.id %}
+                                {% if (reservation.product.id == product.id) and (reservation.isCompleted == 0) %}
                                     {% set confirmedCount = confirmedCount + 1 %}
                                 {% endif %}
                             {% endfor %}
@@ -36,13 +42,16 @@
                                             <span class="badge bg-primary ms-3">{{ product.reservations|length }} réservations</span>&nbsp; dont
                                         {% endif %}
                                         {% if awaitingCount > 0 %}
-                                            <span class="badge bg-warning ms-3">{{ awaitingCount }} réservations en attente</span>
+                                            <span class="badge bg-danger ms-3">{{ awaitingCount }} réservations en attente</span>
                                         {% endif %}
                                         {% if confirmedCount > 0 %}
                                             <span class="badge bg-success ms-3">{{ confirmedCount }} réservations confirmées</span>
                                         {% endif %}
                                         {% if cancelledCount > 0 %}
-                                            <span class="badge bg-danger ms-3">{{ cancelledCount }} réservations annulées</span>
+                                            <span class="badge bg-secondary ms-3">{{ cancelledCount }} réservations annulées</span>
+                                        {% endif %}
+                                        {% if finalisedCount > 0 %}
+                                            <span class="badge bg-dark ms-3">{{ finalisedCount }} réservations finalisées </span>
                                         {% endif %}
                                     </button>
                                 </h2>
@@ -85,6 +94,7 @@
                                                         {% endif %}
                                                     </li>
                                                     <a class="btn btn-outline-danger btn-sm ms-auto" href="{{ path('reservation_cancel', {'id': reservation.id}) }}">Annuler la réservation</a>
+                                                    {# <a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_devis', {'id': reservation.id}) }}">Générer le devis</a> #}
                                                 {% endif %}
                                             {% endfor %}
                                         </ul>
@@ -94,20 +104,22 @@
                                         </div>
                                         <ul>
                                             {% for reservation in ConfirmedStatus %}
-                                                {% if reservation.product.id == product.id %}
+                                                {% if (reservation.product.id == product.id) and (reservation.isCompleted == 0) %}
                                                     <li class="border-bottom pb-2 mb-2">
                                                         Réservation ID: {{ reservation.id }} - 
                                                         pour un séjour du {{ reservation.startDate|date('d/m/Y') }} au {{ reservation.endDate|date('d/m/Y') }}<br>
                                                         réservation faîte le {{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }}
                                                         {% if reservation.user %}
                                                             par {{ reservation.user.firstName }} {{ reservation.user.lastName }} - {{ reservation.user.email }}
-                                                        {% endif %}
+                                                        {% endif %} <br>
+                                                        réservation confirmée le {{ reservation.confirmedAt|date('d/m/Y H:i:s', 'Europe/Paris') }} par {{ reservation.confirmedBy.firstName }} {{ reservation.confirmedBy.lastName }}
                                                     </li>
                                                     <a class="btn btn-outline-danger btn-sm ms-auto" href="{{ path('reservation_cancel', {'id': reservation.id}) }}">Annuler la réservation</a>
+                                                    {# <a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_deposit_bill', {'id': reservation.id}) }}">Générer la facture d'accompte</a> #}
                                                 {% endif %}
                                             {% endfor %}
                                         </ul>
-
+            
                                         <div class="mb-2">
                                             <strong>Réservations annulées :</strong> {{ cancelledCount }}
                                         </div>
@@ -120,8 +132,29 @@
                                                         réservation faîte le {{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }}
                                                         {% if reservation.user %}
                                                             par {{ reservation.user.firstName }} {{ reservation.user.lastName }} - {{ reservation.user.email }}
-                                                        {% endif %}
+                                                        {% endif %} <br>
+                                                        réservation annulée le {{ reservation.cancelledAt|date('d/m/Y H:i:s', 'Europe/Paris') }} par {{ reservation.cancelledBy.firstName }} {{ reservation.cancelledBy.lastName }}
                                                     </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+
+                                        <div class="mb-2">
+                                            <strong>Réservations finalisées : </strong> {{ finalisedCount }}
+                                        </div>
+                                        <ul>
+                                            {% for reservation in FinalisedStatus %}
+                                                {% if reservation.product.id == product.id %}
+                                                    <li class="border-bottom pb-2 mb-2">
+                                                        Réservation ID: {{ reservation.id }} -
+                                                        pour un séjour du {{ reservation.startDate|date('d/m/Y') }} au {{ reservation.endDate|date('d/m/y') }} <br>
+                                                        réservation faîte le {{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }}
+                                                        {% if reservation.user %}
+                                                            par {{ reservation.user.firstName }} {{ reservation.user.lastName }} - {{ reservation.user.email }}
+                                                        {% endif %} <br>
+                                                        réservation confirmée le {{ reservation.confirmedAt|date('d/m/Y H:i:s', 'Europe/Paris') }} par {{ reservation.confirmedBy.firstName }} {{ reservation.confirmedBy.lastName }}
+                                                    </li>
+                                                    {# <a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_bill', {'id': reservation.id}) }}">Générer la facture</a> #}
                                                 {% endif %}
                                             {% endfor %}
                                         </ul>
@@ -129,6 +162,9 @@
                                 </div>
                             </div>
                         {% endfor %}
+                        <div class="d-flex justify-content-center ">
+                            {{ knp_pagination_render(pagination) }}
+                        </div>
                     </div>
                 </div>    
             </div>

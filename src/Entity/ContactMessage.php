@@ -2,6 +2,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dom\Text;
 
 #[ORM\Entity]
 class ContactMessage
@@ -31,6 +32,18 @@ class ContactMessage
 
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $read_At = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $answered_at = null;
+
+    #[ORM\ManyToOne(inversedBy: 'contactMessages')]
+    private ?User $answered_by = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $answer_content = null;
 
     // Getters and setters
 
@@ -113,6 +126,54 @@ class ContactMessage
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getReadAt(): ?\DateTimeImmutable
+    {
+        return $this->read_At;
+    }
+
+    public function setReadAt(?\DateTimeImmutable $read_At): static
+    {
+        $this->read_At = $read_At;
+
+        return $this;
+    }
+
+    public function getAnsweredAt(): ?\DateTimeImmutable
+    {
+        return $this->answered_at;
+    }
+
+    public function setAnsweredAt(?\DateTimeImmutable $answered_at): static
+    {
+        $this->answered_at = $answered_at;
+
+        return $this;
+    }
+
+    public function getAnsweredBy(): ?User
+    {
+        return $this->answered_by;
+    }
+
+    public function setAnsweredBy(?User $answered_by): static
+    {
+        $this->answered_by = $answered_by;
+
+        return $this;
+    }
+
+    public function getAnswerContent(): ?string
+    {
+        return $this->answer_content;
+    }
+
+    public function setAnswerContent(?string $answer_content): self
+    {
+        $this->answer_content = $answer_content;
+
         return $this;
     }
 }

@@ -25,8 +25,7 @@
     }
 </style>
 <div class="parallax">
-    <div class="container">
-        {# Carrousel sur toute la largeur #}
+    <div class="container m-5">
         {% set images = [] %}
         {% if product.imageUrl %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.imageUrl}), 'label': 'Image principale'}]) %}{% endif %}
         {% if product.image2 %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.image2}), 'label': 'Image 2'}]) %}{% endif %}
@@ -36,7 +35,7 @@
         <div class="row justify-content-center">
             <div class="col-12">
                 <div id="carouselProduct" class="carousel slide mb-4" data-bs-ride="carousel" style="max-width:900px;margin:auto;">
-                    <div class="carousel-inner rounded" style="height:500px; background:#eee;">
+                    <div class="carousel-inner rounded-5" style="height:500px; background:#eee;">
                         {% for img in images %}
                             <div class="carousel-item {% if loop.first %}active{% endif %}">
                                 <img src="{{ img.src }}" class="d-block w-100 h-100 object-fit-cover" alt="{{ img.label }}" style="max-height:500px;">
@@ -121,7 +120,7 @@
                             {% endif %}
                         </div>
                         <div class="mt-auto d-flex flex-column gap-2">
-                            <a href="{{ path('app_reservation_new', {'id': product.id}) }}" class="btn btn-dark w-100">Réserver ce logement</a>
+                            <a href="{{ path('app_reservation_new_user', {'id': product.id}) }}" class="btn btn-dark w-100">Réserver ce logement</a>
                             <a href="{{ path('app_user_all_products') }}" class="btn btn-outline-secondary w-100">Retour à la liste</a>
                             <a href="{{ path('app_contact', {'productId': product.id}) }}" class="btn btn-outline-primary w-100">Poser une question sur ce bien</a>
                         </div>

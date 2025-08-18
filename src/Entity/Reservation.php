@@ -33,6 +33,21 @@ class Reservation
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $cancelled_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $confirmed_at = null;
+
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    private ?User $cancelled_by = null;
+
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    private ?User $confirmed_by = null;
+
+    #[ORM\Column]
+    private ?bool $isCompleted = null;
     //endregion
 
     //region Getters and Setters
@@ -112,4 +127,64 @@ class Reservation
         return $this;
     }
     //endregion
+
+    public function getCancelledAt(): ?\DateTimeImmutable
+    {
+        return $this->cancelled_at;
+    }
+
+    public function setCancelledAt(?\DateTimeImmutable $cancelled_at): static
+    {
+        $this->cancelled_at = $cancelled_at;
+
+        return $this;
+    }
+
+    public function getConfirmedAt(): ?\DateTimeImmutable
+    {
+        return $this->confirmed_at;
+    }
+
+    public function setConfirmedAt(?\DateTimeImmutable $confirmed_at): static
+    {
+        $this->confirmed_at = $confirmed_at;
+
+        return $this;
+    }
+
+    public function getCancelledBy(): ?User
+    {
+        return $this->cancelled_by;
+    }
+
+    public function setCancelledBy(?User $cancelled_by): static
+    {
+        $this->cancelled_by = $cancelled_by;
+
+        return $this;
+    }
+
+    public function getConfirmedBy(): ?User
+    {
+        return $this->confirmed_by;
+    }
+
+    public function setConfirmedBy(?User $confirmed_by): static
+    {
+        $this->confirmed_by = $confirmed_by;
+
+        return $this;
+    }
+
+    public function isCompleted(): ?bool
+    {
+        return $this->isCompleted;
+    }
+
+    public function setIsCompleted(bool $isCompleted): static
+    {
+        $this->isCompleted = $isCompleted;
+
+        return $this;
+    }
 }
