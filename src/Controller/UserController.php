@@ -11,16 +11,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Mime\Email;
 use App\Repository\ReservationRepository;
 use App\Repository\ProductRepository;
 use App\Repository\SubCategoryRepository;
 use App\Form\ProfileType;
 use App\Repository\CategoryRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class UserController extends AbstractController
 {
+    public function __construct(private MailerInterface $mailer) {}
+
     //region Liste des utilisateurs ADMIN
     #[Route('/admin/user', name: 'app_user')]
     public function displayAllUsers(UserRepository $repo): Response
@@ -267,9 +271,22 @@ final class UserController extends AbstractController
                 if (!$reservation->getStatus()) {
                     $reservation->setStatus('en attente');
                 }
+                $reservation->setIsCompleted(false);
                 $entityManager->persist($reservation);
                 $entityManager->flush();
                 $this->addFlash('success', 'Réservation enregistrée !');
+
+                //partie pour générer un mail de réservation avec devis
+                $html = $this->renderView('mail/enAttente.html.twig', [
+                    'reservation' => $reservation
+                ]);
+                $email = (new Email())
+                    ->from('EscaleEvasion@EE.fr')
+                    ->to($reservation->getUser()->getEmail())
+                    ->subject('Réservation en attente, valable 24H')
+                    ->html($html);
+                $this->mailer->send($email);
+
                 return $this->redirectToRoute('app_cart');
             }
         }

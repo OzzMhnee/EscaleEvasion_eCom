@@ -61,8 +61,8 @@
                                             <input type="hidden" name="_token" value="{{ csrf_token('remove' ~ reservation.id) }}">
                                             <button type="submit" class="btn btn-outline-danger btn-sm ms-1">Annuler</button>
                                         </form>
-                                        <form method="post" action="#" style="display:inline;">
-                                            <button type="submit" class="btn btn-outline-success btn-sm ms-1" disabled title="Simulation">Verser l'acompte</button>
+                                        <form method="get" action="{{ path('app_stripe_checkout', {'id': reservation.id}) }}" style="display:inline;">
+                                            <button data-turbo="false" type="submit" class="btn btn-outline-success btn-sm ms-1">Verser l'acompte</button>
                                         </form>
                                     </td>
                                 </tr>

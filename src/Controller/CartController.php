@@ -133,6 +133,7 @@ class CartController extends AbstractController
         //////////////////// Partie commentée car nous avons déjà une commande pour annuler les réservations expirées
         //////////////////// faire :  php bin/console app:cancel-expired-reservations
         //////////////////// Il va falloir lancer cette commande régulièrement (cron job ou scheduler) pour annuler les réservations expirées
+        //////////////////// Actuellement le statut se modifie lors de chaque visite du panier.
         ///// cf fichier src/Command/CancelExpiredReservationsCommand.php
 
         // Vider le panier dans la session

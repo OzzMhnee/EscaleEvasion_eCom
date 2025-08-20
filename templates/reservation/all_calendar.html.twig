@@ -94,7 +94,7 @@
                                                         {% endif %}
                                                     </li>
                                                     <a class="btn btn-outline-danger btn-sm ms-auto" href="{{ path('reservation_cancel', {'id': reservation.id}) }}">Annuler la réservation</a>
-                                                    {# <a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_devis', {'id': reservation.id}) }}">Générer le devis</a> #}
+                                                    <a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_devis', {'id': reservation.id}) }}">Générer le devis</a>
                                                 {% endif %}
                                             {% endfor %}
                                         </ul>
@@ -112,10 +112,15 @@
                                                         {% if reservation.user %}
                                                             par {{ reservation.user.firstName }} {{ reservation.user.lastName }} - {{ reservation.user.email }}
                                                         {% endif %} <br>
-                                                        réservation confirmée le {{ reservation.confirmedAt|date('d/m/Y H:i:s', 'Europe/Paris') }} par {{ reservation.confirmedBy.firstName }} {{ reservation.confirmedBy.lastName }}
+                                                        réservation confirmée le {{ reservation.confirmedAt|date('d/m/Y H:i:s', 'Europe/Paris') }} par 
+                                                        {% if reservation.confirmedBy %}
+                                                            par {{ reservation.confirmedBy.firstName }} {{ reservation.confirmedBy.lastName }}
+                                                        {% else %}
+                                                            <span class="text-muted">Utilisateur inconnu</span>
+                                                        {% endif %}
                                                     </li>
                                                     <a class="btn btn-outline-danger btn-sm ms-auto" href="{{ path('reservation_cancel', {'id': reservation.id}) }}">Annuler la réservation</a>
-                                                    {# <a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_deposit_bill', {'id': reservation.id}) }}">Générer la facture d'accompte</a> #}
+                                                    <a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_deposit_bill', {'id': reservation.id}) }}">Générer la facture d'accompte</a>
                                                 {% endif %}
                                             {% endfor %}
                                         </ul>
@@ -133,7 +138,12 @@
                                                         {% if reservation.user %}
                                                             par {{ reservation.user.firstName }} {{ reservation.user.lastName }} - {{ reservation.user.email }}
                                                         {% endif %} <br>
-                                                        réservation annulée le {{ reservation.cancelledAt|date('d/m/Y H:i:s', 'Europe/Paris') }} par {{ reservation.cancelledBy.firstName }} {{ reservation.cancelledBy.lastName }}
+                                                        réservation annulée le {{ reservation.cancelledAt|date('d/m/Y H:i:s', 'Europe/Paris') }} par 
+                                                        {% if reservation.cancelledBy %}
+                                                            par {{ reservation.cancelledBy.firstName }} {{ reservation.cancelledBy.lastName }}
+                                                        {% else %}
+                                                            <span class="text-muted">Automatique ou inconnu</span>
+                                                        {% endif %}
                                                     </li>
                                                 {% endif %}
                                             {% endfor %}
@@ -154,7 +164,7 @@
                                                         {% endif %} <br>
                                                         réservation confirmée le {{ reservation.confirmedAt|date('d/m/Y H:i:s', 'Europe/Paris') }} par {{ reservation.confirmedBy.firstName }} {{ reservation.confirmedBy.lastName }}
                                                     </li>
-                                                    {# <a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_bill', {'id': reservation.id}) }}">Générer la facture</a> #}
+                                                    <a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_bill', {'id': reservation.id}) }}">Générer la facture</a>
                                                 {% endif %}
                                             {% endfor %}
                                         </ul>
