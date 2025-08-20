@@ -55,7 +55,7 @@ class CartController extends AbstractController
         // On stocke les ID des réservations dans la session (clé 'cart')
         $cart = $session->get('cart', []);
         foreach ($pendingReservations as $reservation) {
-            if (!in_array($reservation->getId(), $cart)) {
+            if (!in_array(needle: $reservation->getId(), haystack: $cart)) { //chercher une aiguille dans une meule de foin
                 $cart[] = $reservation->getId();
             }
         }

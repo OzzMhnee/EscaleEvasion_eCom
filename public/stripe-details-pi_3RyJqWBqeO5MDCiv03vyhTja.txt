@@ -1,0 +1,73 @@
+Stripe\PaymentIntent Object
+(
+    [id] => pi_3RyJqWBqeO5MDCiv03vyhTja
+    [object] => payment_intent
+    [amount] => 150000
+    [amount_capturable] => 0
+    [amount_details] => Stripe\StripeObject Object
+        (
+            [tip] => Array
+                (
+                )
+
+        )
+
+    [amount_received] => 150000
+    [application] => 
+    [application_fee_amount] => 
+    [automatic_payment_methods] => 
+    [canceled_at] => 
+    [cancellation_reason] => 
+    [capture_method] => automatic_async
+    [client_secret] => pi_3RyJqWBqeO5MDCiv03vyhTja_secret_NoSFWMBMS3YySBImWLHcAVxWT
+    [confirmation_method] => automatic
+    [created] => 1755726424
+    [currency] => eur
+    [customer] => 
+    [description] => 
+    [excluded_payment_method_types] => 
+    [last_payment_error] => 
+    [latest_charge] => ch_3RyJqWBqeO5MDCiv07ElAYJB
+    [livemode] => 
+    [metadata] => Stripe\StripeObject Object
+        (
+            [clientName] => Jeremie LM
+            [clientEmail] => JLM@mail.fr
+            [logement] => Mélissa
+            [sejourDates] => 01/10/2025 - 31/10/2025
+            [reservationId] => 29
+        )
+
+    [next_action] => 
+    [on_behalf_of] => 
+    [payment_method] => pm_1RyJqWBqeO5MDCivETAdH6m9
+    [payment_method_configuration_details] => 
+    [payment_method_options] => Stripe\StripeObject Object
+        (
+            [card] => Stripe\StripeObject Object
+                (
+                    [installments] => 
+                    [mandate_options] => 
+                    [network] => 
+                    [request_three_d_secure] => automatic
+                )
+
+        )
+
+    [payment_method_types] => Array
+        (
+            [0] => card
+        )
+
+    [processing] => 
+    [receipt_email] => 
+    [review] => 
+    [setup_future_usage] => 
+    [shipping] => 
+    [source] => 
+    [statement_descriptor] => 
+    [statement_descriptor_suffix] => 
+    [status] => succeeded
+    [transfer_data] => 
+    [transfer_group] => 
+)

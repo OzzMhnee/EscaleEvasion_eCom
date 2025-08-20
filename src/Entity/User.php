@@ -59,6 +59,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reservations = new ArrayCollection();
         $this->contactMessages = new ArrayCollection();
     }
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $billingAddressLine1 = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $billingAddressCity = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $billingAddressPostalCode = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $phone = null;
     //endregion
 
     //region Getters and Setters
@@ -225,6 +236,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             }
         }
 
+        return $this;
+    }
+
+    // Adresse de facturation - ligne 1
+    public function getBillingAddressLine1(): ?string
+    {
+        return $this->billingAddressLine1;
+    }
+
+    public function setBillingAddressLine1(?string $billingAddressLine1): static
+    {
+        $this->billingAddressLine1 = $billingAddressLine1;
+        return $this;
+    }
+
+    // Ville de facturation
+    public function getBillingAddressCity(): ?string
+    {
+        return $this->billingAddressCity;
+    }
+
+    public function setBillingAddressCity(?string $billingAddressCity): static
+    {
+        $this->billingAddressCity = $billingAddressCity;
+        return $this;
+    }
+
+    // Code postal de facturation
+    public function getBillingAddressPostalCode(): ?string
+    {
+        return $this->billingAddressPostalCode;
+    }
+
+    public function setBillingAddressPostalCode(?string $billingAddressPostalCode): static
+    {
+        $this->billingAddressPostalCode = $billingAddressPostalCode;
+        return $this;
+    }
+
+    // Téléphone
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
         return $this;
     }
 }

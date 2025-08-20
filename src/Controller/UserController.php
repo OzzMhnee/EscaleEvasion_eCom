@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-
 use App\Entity\User;
 use App\Entity\Product;
 use App\Repository\UserRepository;
@@ -32,7 +31,7 @@ final class UserController extends AbstractController
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
             'users' => $repo->findAll(),
-        ]); 
+        ]);
     }
     //endregion
 
@@ -112,7 +111,7 @@ final class UserController extends AbstractController
     }
     //endregion
 
-    //region Mes réservations 
+    //region Mes réservations
     #[Route('/mes-reservations', name: 'app_user_reservations')]
     public function myReservations(ReservationRepository $reservationRepository): Response
     {
@@ -151,7 +150,7 @@ final class UserController extends AbstractController
     //region affichage de tous les produits par catégorie
     #[Route('/category/{id}/products', name: 'app_user_category_products')]
     public function categoryProducts(ProductRepository $productRepository, $id, CategoryRepository $categoryRepository, Request $request, PaginatorInterface $paginator): Response
-    { 
+    {
         // récupération de la catégorie par son ID
         $category = $categoryRepository->find($id);
 

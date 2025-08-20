@@ -3,25 +3,28 @@
 namespace App\Controller;
 
 use App\Repository\ReservationRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Stripe;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\StripePayment;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-
 
 class StripeController extends AbstractController
 {
-    //region réusite paiement
+    //region réussite paiement
     #[Route('/pay/success/{id}', name: 'app_stripe_success')]
     public function success($id, ReservationRepository $reservationRepository, EntityManagerInterface $entityManager): Response
     {
         $reservation = $reservationRepository->find($id);
         if ($reservation) {
             $reservation->setStatus('confirmée');
+            $reservation->setConfirmedAt(new \DateTimeImmutable());
+            $reservation->setConfirmedBy($reservation->getUser());
+
+
             $entityManager->flush();
             $this->addFlash('success', "Le paiement de l'acompte pour votre séjour a bien été effectué! Reportez vous sur l'email de confirmation pour connaître les prochaines étapes.");
         }
@@ -60,7 +63,7 @@ class StripeController extends AbstractController
         //////// Définir la clé de webhook de Stripe, elle est à remettre à jour tous les 90 jours.
         //////// Pour se faire : invite de commandes cmd    -> stripe login
         ////////                                            -> stripe listen --forward-to http://localhost:8000/stripe/notify
-        ////////                                            / ou ->  stripe listen et -> stripe --forward-to http://localhost:8000/stripe/notify                               
+        ////////                                            / ou ->  stripe listen et -> stripe --forward-to http://localhost:8000/stripe/notify
         //////// affecter à $endpoint_secret la valeur de webhooko signing secret
         $endpoint_secret = 'whsec_dd9be64d8ebcd07b44538b5fa3052fcef312fc35e25df09640949ef3d64fe9d4';
         // Récupérer le contenu de la requête
@@ -89,27 +92,45 @@ class StripeController extends AbstractController
 
         // Gérer les différents types d'événements
         switch ($event->type) {
-            case 'payment_intent.succeeded':
-                $paymentIntent = $event->data->object;
-
+            case 'charge.succeeded':
+            case 'charge.updated':
+                $charge = $event->data->object;
                 //fichier de test
-                $fileName = 'stripe-details-' . $paymentIntent->id . '.txt';
-                file_put_contents($fileName, print_r($paymentIntent, true));
-                
-                $reservationId = $paymentIntent->metadata->reservationId ?? null;
+                $fileName = 'stripe-details-' . $charge->id . '.txt';
+                file_put_contents($fileName, print_r($charge, true));
+
+                $reservationId = $charge->metadata->reservationId ?? null;
+                $address = $charge->billing_details->address ?? null;
+
                 if ($reservationId) {
                     $reservation = $reservationRepository->find($reservationId);
                     if ($reservation) {
-                        // Vérifie le montant payé
-                        $expectedAmount = $reservation->getProduct()->getPrice() * 0.10; // acompte 10%
-                        $stripeAmount = $paymentIntent->amount_received / 100;
-                        if (abs($expectedAmount - $stripeAmount) < 0.01) {
-                            $reservation->setStatus('confirmée');
-                            $reservation->setIsCompleted(false);
-                            $entityManager->flush();
+                        $reservation->setStatus('confirmée');
+                        $reservation->setIsCompleted(false);
+
+                        $user = $reservation->getUser();
+                        if ($user) {
+                            if ($address) {
+                                $user->setBillingAddressLine1($address->line1 ?? null);
+                                $user->setBillingAddressCity($address->city ?? null);
+                                $user->setBillingAddressPostalCode($address->postal_code ?? null);
+                            }
                         }
+
+                        file_put_contents('log.txt', "User: " . print_r([
+                            'id' => $user?->getId(),
+                            'address' => $user?->getBillingAddressLine1(),
+                            'city' => $user?->getBillingAddressCity(),
+                            'cp' => $user?->getBillingAddressPostalCode(),
+                        ], true), FILE_APPEND);
+                        $entityManager->flush();
                     }
                 }
+                break;
+            case 'checkout.session.completed':
+                break;
+            case 'payment_intent.succeeded':
+                // Optionnel : pour gérer la confirmation du paiement
                 break;
             case 'payment_method.attached':
                 // Optionnel : pour gérer l'attachement d'une méthode de paiement
@@ -121,9 +142,11 @@ class StripeController extends AbstractController
 
         return new Response('Événement reçu avec succès', 200);
     }
+    //endregion
 
+    //region checkout - Utilisation de Service/StripePayment pour createCheckoutSession
     #[Route('/pay/checkout/{id}', name: 'app_stripe_checkout')]
-    public function checkout($id, ReservationRepository $reservationRepository): Response
+    public function checkout($id, ReservationRepository $reservationRepository, StripePayment $stripePayment): Response
     {
         // 1. Récupérer la réservation
         $reservation = $reservationRepository->find($id);
@@ -132,46 +155,15 @@ class StripeController extends AbstractController
             return $this->redirectToRoute('app_cart');
         }
 
-        // 2. Calculer le montant de l'acompte (10% du prix total du séjour)
-        $price = floatval($reservation->getProduct()->getPrice());
-        $nights = ($reservation->getEndDate()->getTimestamp() - $reservation->getStartDate()->getTimestamp()) / 86400;
-        $totalPrice = $price * $nights;
-        $acompte = round($totalPrice * 0.10, 2);
-
-
-        // 3. Créer la session Stripe Checkout
-        \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY'] ?? '');
-
+        // 2. Créer les URLs de succès et d'annulation
         $request = $this->container->get('request_stack')->getCurrentRequest();
         $DOMAIN = $request->getSchemeAndHttpHost();
+        $successUrl = $DOMAIN . $this->generateUrl('app_stripe_success', ['id' => $reservation->getId()]);
+        $cancelUrl = $DOMAIN . $this->generateUrl('app_stripe_cancel');
 
-        $checkout_session = \Stripe\Checkout\Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'eur',
-                    'product_data' => [
-                        'name' => 'Acompte réservation : ' . $reservation->getProduct()->getName(),
-                    ],
-                    'unit_amount' => intval($acompte * 100), // en centimes
-                ],
-                'quantity' => 1,
-            ]],
-            'mode' => 'payment',
-            'success_url' => $DOMAIN . $this->generateUrl('app_stripe_success', ['id' => $reservation->getId()]),
-            'cancel_url' => $DOMAIN . $this->generateUrl('app_stripe_cancel'),
-            'payment_intent_data' => [
-                'metadata' => [
-                    'reservationId' => $reservation->getId(),
-                    'clientName' => $reservation->getUser() ? $reservation->getUser()->getFirstName() . ' ' . $reservation->getUser()->getLastName() : '',
-                    'clientEmail' => $reservation->getUser() ? $reservation->getUser()->getEmail() : '',
-                    'sejourDates' => $reservation->getStartDate()->format('d/m/Y') . ' - ' . $reservation->getEndDate()->format('d/m/Y'),
-                    'logement' => $reservation->getProduct()->getName(),
-                ],
-            ],
-        ]);
+        // 3. Créer la session Stripe Checkout
+        $checkout_session = $stripePayment->createCheckoutSession($reservation, $successUrl, $cancelUrl);
 
-        // 4. Rediriger l'utilisateur vers Stripe Checkout
         return $this->redirect($checkout_session->url, 303);
     }
     //endregion

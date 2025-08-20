@@ -1,0 +1,74 @@
+Stripe\PaymentIntent Object
+(
+    [id] => pi_3RyKEEBqeO5MDCiv1nGvjBU1
+    [object] => payment_intent
+    [amount] => 7000
+    [amount_capturable] => 0
+    [amount_details] => Stripe\StripeObject Object
+        (
+            [tip] => Array
+                (
+                )
+
+        )
+
+    [amount_received] => 7000
+    [application] => 
+    [application_fee_amount] => 
+    [automatic_payment_methods] => 
+    [canceled_at] => 
+    [cancellation_reason] => 
+    [capture_method] => automatic_async
+    [client_secret] => pi_3RyKEEBqeO5MDCiv1nGvjBU1_secret_wCCpPE6xI4wP2MmzitQzVDHrA
+    [confirmation_method] => automatic
+    [created] => 1755727894
+    [currency] => eur
+    [customer] => 
+    [description] => 
+    [excluded_payment_method_types] => 
+    [last_payment_error] => 
+    [latest_charge] => ch_3RyKEEBqeO5MDCiv1UzpuMk6
+    [livemode] => 
+    [metadata] => Stripe\StripeObject Object
+        (
+            [clientName] => Jeremie LM
+            [stripe_session_id] => {{CHECKOUT_SESSION_ID}}
+            [clientEmail] => JLM@mail.fr
+            [logement] => Maxime
+            [reservationId] => 31
+            [sejourDates] => 21/08/2025 - 31/08/2025
+        )
+
+    [next_action] => 
+    [on_behalf_of] => 
+    [payment_method] => pm_1RyKEDBqeO5MDCivj4KEglTo
+    [payment_method_configuration_details] => 
+    [payment_method_options] => Stripe\StripeObject Object
+        (
+            [card] => Stripe\StripeObject Object
+                (
+                    [installments] => 
+                    [mandate_options] => 
+                    [network] => 
+                    [request_three_d_secure] => automatic
+                )
+
+        )
+
+    [payment_method_types] => Array
+        (
+            [0] => card
+        )
+
+    [processing] => 
+    [receipt_email] => 
+    [review] => 
+    [setup_future_usage] => 
+    [shipping] => 
+    [source] => 
+    [statement_descriptor] => 
+    [statement_descriptor_suffix] => 
+    [status] => succeeded
+    [transfer_data] => 
+    [transfer_group] => 
+)

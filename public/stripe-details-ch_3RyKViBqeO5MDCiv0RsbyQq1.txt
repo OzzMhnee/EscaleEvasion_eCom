@@ -1,0 +1,149 @@
+Stripe\Charge Object
+(
+    [id] => ch_3RyKViBqeO5MDCiv0RsbyQq1
+    [object] => charge
+    [amount] => 4600
+    [amount_captured] => 4600
+    [amount_refunded] => 0
+    [application] => 
+    [application_fee] => 
+    [application_fee_amount] => 
+    [balance_transaction] => txn_3RyKViBqeO5MDCiv044qdlnT
+    [billing_details] => Stripe\StripeObject Object
+        (
+            [address] => Stripe\StripeObject Object
+                (
+                    [city] => Avignon
+                    [country] => FR
+                    [line1] => 10 Avenue de la Trillade
+                    [line2] => 
+                    [postal_code] => 84000
+                    [state] => 
+                )
+
+            [email] => roger@mail.fr
+            [name] => roger
+            [phone] => 
+            [tax_id] => 
+        )
+
+    [calculated_statement_descriptor] => Stripe
+    [captured] => 1
+    [created] => 1755728979
+    [currency] => eur
+    [customer] => 
+    [description] => 
+    [destination] => 
+    [dispute] => 
+    [disputed] => 
+    [failure_balance_transaction] => 
+    [failure_code] => 
+    [failure_message] => 
+    [fraud_details] => Array
+        (
+        )
+
+    [livemode] => 
+    [metadata] => Stripe\StripeObject Object
+        (
+            [clientName] => Jeremie LM
+            [clientEmail] => JLM@mail.fr
+            [logement] => Charles
+            [sejourDates] => 21/08/2025 - 23/08/2025
+            [reservationId] => 34
+        )
+
+    [on_behalf_of] => 
+    [order] => 
+    [outcome] => Stripe\StripeObject Object
+        (
+            [advice_code] => 
+            [network_advice_code] => 
+            [network_decline_code] => 
+            [network_status] => approved_by_network
+            [reason] => 
+            [risk_level] => normal
+            [risk_score] => 33
+            [seller_message] => Payment complete.
+            [type] => authorized
+        )
+
+    [paid] => 1
+    [payment_intent] => pi_3RyKViBqeO5MDCiv007r9AAk
+    [payment_method] => pm_1RyKViBqeO5MDCivjwU1FfOo
+    [payment_method_details] => Stripe\StripeObject Object
+        (
+            [card] => Stripe\StripeObject Object
+                (
+                    [amount_authorized] => 4600
+                    [authorization_code] => 089220
+                    [brand] => visa
+                    [checks] => Stripe\StripeObject Object
+                        (
+                            [address_line1_check] => pass
+                            [address_postal_code_check] => pass
+                            [cvc_check] => pass
+                        )
+
+                    [country] => US
+                    [exp_month] => 10
+                    [exp_year] => 2026
+                    [extended_authorization] => Stripe\StripeObject Object
+                        (
+                            [status] => disabled
+                        )
+
+                    [fingerprint] => WIwg1KitJHC4jEiF
+                    [funding] => credit
+                    [incremental_authorization] => Stripe\StripeObject Object
+                        (
+                            [status] => unavailable
+                        )
+
+                    [installments] => 
+                    [last4] => 4242
+                    [mandate] => 
+                    [multicapture] => Stripe\StripeObject Object
+                        (
+                            [status] => unavailable
+                        )
+
+                    [network] => visa
+                    [network_token] => Stripe\StripeObject Object
+                        (
+                            [used] => 
+                        )
+
+                    [network_transaction_id] => 877311910349751
+                    [overcapture] => Stripe\StripeObject Object
+                        (
+                            [maximum_amount_capturable] => 4600
+                            [status] => unavailable
+                        )
+
+                    [regulated_status] => unregulated
+                    [three_d_secure] => 
+                    [wallet] => 
+                )
+
+            [type] => card
+        )
+
+    [radar_options] => Array
+        (
+        )
+
+    [receipt_email] => 
+    [receipt_number] => 
+    [receipt_url] => https://pay.stripe.com/receipts/payment/CAcaFwoVYWNjdF8xUnhtWFpCcWVPNU1EQ2l2KNaYmcUGMgZOkh9fxkk6LBbjtiBToLHwUrnQMjrqfSrtrqpbKyoPisPsol5qZNgSuwuNP7YhuHR9EwIM
+    [refunded] => 
+    [review] => 
+    [shipping] => 
+    [source] => 
+    [source_transfer] => 
+    [statement_descriptor] => 
+    [statement_descriptor_suffix] => 
+    [status] => succeeded
+    [transfer_data] => 
+    [transfer_group] => 
+)

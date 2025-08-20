@@ -9,15 +9,15 @@ use Symfony\Component\Routing\Attribute\Route;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-////////////// Les lignes de code sont pratiquement identiques. 
+////////////// Les lignes de code sont pratiquement identiques.
 ////////////// (mis à part le twig vers lequel ils renvoient)
-///////// A FAIRE POUR AMELIORER : 
+///////// A FAIRE POUR AMELIORER :
 ///////// Créer un constructeur avec pour rassemble le code et l'appeler dans les trois routes avec chemin twig en paramètre.
 
 final class BillController extends AbstractController
 {
     //region Devis
-    #[Route('/devis/{id}', name: 'app_devis')]
+    #[Route(path: '/devis/{id}', name: 'app_devis')]
     public function devis($id, ReservationRepository $reservations): Response
     {
         $reservation = $reservations->find($id);
@@ -65,7 +65,7 @@ final class BillController extends AbstractController
     }
     //endregion
 
-    //region Facture    
+    //region Facture
     #[Route('/bill/{id}', name: 'app_bill')]
     public function bill($id, ReservationRepository $reservations): Response
     {

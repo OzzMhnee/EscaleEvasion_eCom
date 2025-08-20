@@ -1,8 +1,8 @@
 Stripe\PaymentIntent Object
 (
-    [id] => pi_3Ry5bEBqeO5MDCiv3RwXtQws
+    [id] => pi_3RyJtzBqeO5MDCiv2UUrfdXd
     [object] => payment_intent
-    [amount] => 29400
+    [amount] => 25300
     [amount_capturable] => 0
     [amount_details] => Stripe\StripeObject Object
         (
@@ -12,35 +12,35 @@ Stripe\PaymentIntent Object
 
         )
 
-    [amount_received] => 29400
+    [amount_received] => 25300
     [application] => 
     [application_fee_amount] => 
     [automatic_payment_methods] => 
     [canceled_at] => 
     [cancellation_reason] => 
     [capture_method] => automatic_async
-    [client_secret] => pi_3Ry5bEBqeO5MDCiv3RwXtQws_secret_CEeB29Q0Yn3EG9kQCV7CtRJ6i
+    [client_secret] => pi_3RyJtzBqeO5MDCiv2UUrfdXd_secret_Pe14LUwDlbGPEq35TTiEtbrAL
     [confirmation_method] => automatic
-    [created] => 1755671660
+    [created] => 1755726639
     [currency] => eur
     [customer] => 
     [description] => 
     [excluded_payment_method_types] => 
     [last_payment_error] => 
-    [latest_charge] => ch_3Ry5bEBqeO5MDCiv3CSPlKwd
+    [latest_charge] => ch_3RyJtzBqeO5MDCiv2OqQ4oAz
     [livemode] => 
     [metadata] => Stripe\StripeObject Object
         (
             [clientName] => Jeremie LM
             [clientEmail] => JLM@mail.fr
-            [logement] => Karim
-            [reservationId] => 23
-            [sejourDates] => 01/09/2025 - 15/09/2025
+            [logement] => Sabrina
+            [reservationId] => 30
+            [sejourDates] => 20/08/2025 - 31/08/2025
         )
 
     [next_action] => 
     [on_behalf_of] => 
-    [payment_method] => pm_1Ry5bEBqeO5MDCivrF8GMVp7
+    [payment_method] => pm_1RyJtyBqeO5MDCivD2gmX98w
     [payment_method_configuration_details] => 
     [payment_method_options] => Stripe\StripeObject Object
         (

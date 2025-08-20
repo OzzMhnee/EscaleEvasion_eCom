@@ -1,183 +1,284 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Calendrier des réservations{% endblock %}
+{% block title %}Calendrier des réservations
+{% endblock %}
 
 {% block body %}
-    <div class="parallax">
-        <div class="container">
-            <div class="row my-5 justify-content-center">
-                <div class="card p-4 bg-light bg-opacity-50" style="max-width: 1200px;">
-                    <h1>Historique des réservations</h1>        
-                    <div class="accordion" id="accordionProducts">
-                        {% for product in pagination %}
-                            {% set awaitingCount = 0 %}
-                            {% set confirmedCount = 0 %}
-                            {% set cancelledCount = 0 %}
-                            {% set finalisedCount = 0 %}
-                            {% for reservation in FinalisedStatus %}
-                                {% if reservation.product.id == product.id %}
-                                    {% set finalisedCount = finalisedCount + 1 %}
-                                {% endif %}
-                            {% endfor %}
-                            {% for reservation in AwaitingStatus %}
-                                {% if reservation.product.id == product.id %}
-                                    {% set awaitingCount = awaitingCount + 1 %}
-                                {% endif %}
-                            {% endfor %}
-                            {% for reservation in ConfirmedStatus %}
-                                {% if (reservation.product.id == product.id) and (reservation.isCompleted == 0) %}
-                                    {% set confirmedCount = confirmedCount + 1 %}
-                                {% endif %}
-                            {% endfor %}
-                            {% for reservation in CancelledStatus %}
-                                {% if reservation.product.id == product.id %}
-                                    {% set cancelledCount = cancelledCount + 1 %}
-                                {% endif %}
-                            {% endfor %}
-                            <div class="accordion-item mb-3">
-                                <h2 class="accordion-header" id="heading-{{ product.id }}">
-                                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ product.id }}" aria-expanded="false" aria-controls="collapse-{{ product.id }}">
-                                        <span class="me-3">🏠</span> {{ product.name }}
-                                        {% if product.reservations|length > 0 %}
-                                            <span class="badge bg-primary ms-3">{{ product.reservations|length }} réservations</span>&nbsp; dont
-                                        {% endif %}
-                                        {% if awaitingCount > 0 %}
-                                            <span class="badge bg-danger ms-3">{{ awaitingCount }} réservations en attente</span>
-                                        {% endif %}
-                                        {% if confirmedCount > 0 %}
-                                            <span class="badge bg-success ms-3">{{ confirmedCount }} réservations confirmées</span>
-                                        {% endif %}
-                                        {% if cancelledCount > 0 %}
-                                            <span class="badge bg-secondary ms-3">{{ cancelledCount }} réservations annulées</span>
-                                        {% endif %}
-                                        {% if finalisedCount > 0 %}
-                                            <span class="badge bg-dark ms-3">{{ finalisedCount }} réservations finalisées </span>
-                                        {% endif %}
-                                    </button>
-                                </h2>
-                                <div id="collapse-{{ product.id }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ product.id }}" data-bs-parent="#accordionProducts">
-                                    <div class="accordion-body">
-                                        <div class="mb-2">
-                                            <strong>Nombre de réservations dans l'historique complet :</strong> {{ product.reservations|length }}
-                                        </div>
-                                        <div class="row mb-2">
-                                            <div class="col-md-4"><strong>Ville :</strong> {{ product.city }}</div>
-                                            <div class="col-md-4"><strong>Département :</strong> {{ product.departement }}</div>
-                                            <div class="col-md-4"><strong>Surface :</strong> {{ product.surface }} m²</div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <div class="col-md-4"><strong>Couchages :</strong> {{ product.couchages }}</div>
-                                            <div class="col-md-4"><strong>Prix par nuit :</strong> {{ product.price }} €</div>
-                                            <div class="col-md-4"><strong>Disponible :</strong> {{ product.isAvailable ? 'Oui' : 'Non' }}</div>
-                                        </div>
-                                        <div class="mb-2">
-                                            <strong>Sous-catégories :</strong>
-                                            {% for sub in product.subCategory %}
-                                                {{ sub.name }}{% if not loop.last %}, {% endif %}
-                                            {% else %}
-                                                <span class="text-muted">Aucune</span>
-                                            {% endfor %}
-                                        </div>
-                                        <hr>
-                                        <div class="mb-2">
-                                            <strong>Réservations en attente :</strong> {{ awaitingCount }}
-                                        </div>
-                                        <ul>
-                                            {% for reservation in AwaitingStatus %}
-                                                {% if reservation.product.id == product.id %}
-                                                    <li class="border-bottom pb-2 mb-2">
-                                                        Réservation ID: {{ reservation.id }} - 
-                                                        pour un séjour du {{ reservation.startDate|date('d/m/Y') }} au {{ reservation.endDate|date('d/m/Y') }}<br>
-                                                        réservation faîte le {{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }}
-                                                        {% if reservation.user %}
-                                                            par {{ reservation.user.firstName }} {{ reservation.user.lastName }} - {{ reservation.user.email }}
-                                                        {% endif %}
-                                                    </li>
-                                                    <a class="btn btn-outline-danger btn-sm ms-auto" href="{{ path('reservation_cancel', {'id': reservation.id}) }}">Annuler la réservation</a>
-                                                    <a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_devis', {'id': reservation.id}) }}">Générer le devis</a>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ul>
+	<div class="parallax">
+		<div class="container">
+			<div class="row my-5 justify-content-center">
+				<div class="card p-4 bg-light bg-opacity-50" style="max-width: 1200px;">
+					<h1>Historique des réservations</h1>
+					<div class="accordion" id="accordionProducts">
+						{% for product in pagination %}
+							{# region Initialisation et incrémentation des compteurs #}
+							{% set awaitingCount = 0 %}
+							{% set confirmedCount = 0 %}
+							{% set cancelledCount = 0 %}
+							{% set finalisedCount = 0 %}
+							{% for reservation in FinalisedStatus %}
+								{% if reservation.product.id == product.id %}
+									{% set finalisedCount = finalisedCount + 1 %}
+								{% endif %}
+							{% endfor %}
+							{% for reservation in AwaitingStatus %}
+								{% if reservation.product.id == product.id %}
+									{% set awaitingCount = awaitingCount + 1 %}
+								{% endif %}
+							{% endfor %}
+							{% for reservation in ConfirmedStatus %}
+								{% if (reservation.product.id == product.id) and (reservation.isCompleted == 0) %}
+									{% set confirmedCount = confirmedCount + 1 %}
+								{% endif %}
+							{% endfor %}
+							{% for reservation in CancelledStatus %}
+								{% if reservation.product.id == product.id %}
+									{% set cancelledCount = cancelledCount + 1 %}
+								{% endif %}
+							{% endfor %}
+							{# endregion #}
+							<div
+								class="accordion-item mb-3">
+								{# region Bandeau Titre #}
+								<h2 class="accordion-header" id="heading-{{ product.id }}">
+									<button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ product.id }}" aria-expanded="false" aria-controls="collapse-{{ product.id }}">
+										<span class="me-3">🏠</span>
+										{{ product.name }}
+										{% if product.reservations|length > 0 %}
+											<span class="badge bg-primary ms-3">{{ product.reservations|length }}
+												réservations</span>&nbsp; dont
+										{% endif %}
+										{% if awaitingCount > 0 %}
+											<span class="badge bg-danger ms-3">{{ awaitingCount }}
+												réservations en attente</span>
+										{% endif %}
+										{% if confirmedCount > 0 %}
+											<span class="badge bg-success ms-3">{{ confirmedCount }}
+												réservations confirmées</span>
+										{% endif %}
+										{% if cancelledCount > 0 %}
+											<span class="badge bg-secondary ms-3">{{ cancelledCount }}
+												réservations annulées</span>
+										{% endif %}
+										{% if finalisedCount > 0 %}
+											<span class="badge bg-dark ms-3">{{ finalisedCount }}
+												réservations finalisées
+											</span>
+										{% endif %}
+									</button>
+								</h2>
+								{# endregion #}
 
-                                        <div class="mb-2">
-                                            <strong>Réservations confirmées :</strong> {{ confirmedCount }}
-                                        </div>
-                                        <ul>
-                                            {% for reservation in ConfirmedStatus %}
-                                                {% if (reservation.product.id == product.id) and (reservation.isCompleted == 0) %}
-                                                    <li class="border-bottom pb-2 mb-2">
-                                                        Réservation ID: {{ reservation.id }} - 
-                                                        pour un séjour du {{ reservation.startDate|date('d/m/Y') }} au {{ reservation.endDate|date('d/m/Y') }}<br>
-                                                        réservation faîte le {{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }}
-                                                        {% if reservation.user %}
-                                                            par {{ reservation.user.firstName }} {{ reservation.user.lastName }} - {{ reservation.user.email }}
-                                                        {% endif %} <br>
-                                                        réservation confirmée le {{ reservation.confirmedAt|date('d/m/Y H:i:s', 'Europe/Paris') }} par 
-                                                        {% if reservation.confirmedBy %}
-                                                            par {{ reservation.confirmedBy.firstName }} {{ reservation.confirmedBy.lastName }}
-                                                        {% else %}
-                                                            <span class="text-muted">Utilisateur inconnu</span>
-                                                        {% endif %}
-                                                    </li>
-                                                    <a class="btn btn-outline-danger btn-sm ms-auto" href="{{ path('reservation_cancel', {'id': reservation.id}) }}">Annuler la réservation</a>
-                                                    <a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_deposit_bill', {'id': reservation.id}) }}">Générer la facture d'accompte</a>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ul>
-            
-                                        <div class="mb-2">
-                                            <strong>Réservations annulées :</strong> {{ cancelledCount }}
-                                        </div>
-                                        <ul>
-                                            {% for reservation in CancelledStatus %}
-                                                {% if reservation.product.id == product.id %}
-                                                    <li  class=" border-bottom pb-2 mb-2">
-                                                        Réservation ID: {{ reservation.id }} - 
-                                                        pour un séjour du {{ reservation.startDate|date('d/m/Y') }} au {{ reservation.endDate|date('d/m/Y') }}<br>
-                                                        réservation faîte le {{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }}
-                                                        {% if reservation.user %}
-                                                            par {{ reservation.user.firstName }} {{ reservation.user.lastName }} - {{ reservation.user.email }}
-                                                        {% endif %} <br>
-                                                        réservation annulée le {{ reservation.cancelledAt|date('d/m/Y H:i:s', 'Europe/Paris') }} par 
-                                                        {% if reservation.cancelledBy %}
-                                                            par {{ reservation.cancelledBy.firstName }} {{ reservation.cancelledBy.lastName }}
-                                                        {% else %}
-                                                            <span class="text-muted">Automatique ou inconnu</span>
-                                                        {% endif %}
-                                                    </li>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ul>
+								{# region Infos produit #}
+								<div id="collapse-{{ product.id }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ product.id }}" data-bs-parent="#accordionProducts">
+									<div class="accordion-body">
+										<div class="mb-2">
+											<strong>Nombre de réservations dans l'historique complet :</strong>
+											{{ product.reservations|length }}
+										</div>
+										<div class="row mb-2">
+											<div class="col-md-4">
+												<strong>Ville :</strong>
+												{{ product.city }}</div>
+											<div class="col-md-4">
+												<strong>Département :</strong>
+												{{ product.departement }}</div>
+											<div class="col-md-4">
+												<strong>Surface :</strong>
+												{{ product.surface }}
+												m²</div>
+										</div>
+										<div class="row mb-2">
+											<div class="col-md-4">
+												<strong>Couchages :</strong>
+												{{ product.couchages }}</div>
+											<div class="col-md-4">
+												<strong>Prix par nuit :</strong>
+												{{ product.price }}
+												€</div>
+											<div class="col-md-4">
+												<strong>Disponible :</strong>
+												{{ product.isAvailable ? 'Oui' : 'Non' }}</div>
+										</div>
+										<div class="mb-2">
+											<strong>Sous-catégories :</strong>
+											{% for sub in product.subCategory %}
+												{{ sub.name }}
+												{% if not loop.last %},
+												{% endif %}
+											{% else %}
+												<span class="text-muted">Aucune</span>
+											{% endfor %}
+										</div>
+										<hr>
+										{# endregion #}
 
-                                        <div class="mb-2">
-                                            <strong>Réservations finalisées : </strong> {{ finalisedCount }}
-                                        </div>
-                                        <ul>
-                                            {% for reservation in FinalisedStatus %}
-                                                {% if reservation.product.id == product.id %}
-                                                    <li class="border-bottom pb-2 mb-2">
-                                                        Réservation ID: {{ reservation.id }} -
-                                                        pour un séjour du {{ reservation.startDate|date('d/m/Y') }} au {{ reservation.endDate|date('d/m/y') }} <br>
-                                                        réservation faîte le {{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }}
-                                                        {% if reservation.user %}
-                                                            par {{ reservation.user.firstName }} {{ reservation.user.lastName }} - {{ reservation.user.email }}
-                                                        {% endif %} <br>
-                                                        réservation confirmée le {{ reservation.confirmedAt|date('d/m/Y H:i:s', 'Europe/Paris') }} par {{ reservation.confirmedBy.firstName }} {{ reservation.confirmedBy.lastName }}
-                                                    </li>
-                                                    <a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_bill', {'id': reservation.id}) }}">Générer la facture</a>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                        <div class="d-flex justify-content-center ">
-                            {{ knp_pagination_render(pagination) }}
-                        </div>
-                    </div>
-                </div>    
-            </div>
-        </div>
-    </div>
+										{# region Statut en Attente #}
+											<div class="mb-2"> <strong>Réservations en attente :</strong>
+											{{ awaitingCount }}
+										</div>
+										<ul>
+											{% for reservation in AwaitingStatus %}
+												{% if reservation.product.id == product.id %}
+													<li class="border-bottom pb-2 mb-2">
+														Réservation ID:
+														{{ reservation.id }}
+														- pour un séjour du
+														{{ reservation.startDate|date('d/m/Y') }}
+														au
+														{{ reservation.endDate|date('d/m/Y') }}<br>
+														réservation faîte le
+														{{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }}
+														{% if reservation.user %}
+															par
+															{{ reservation.user.firstName }}
+															{{ reservation.user.lastName }}
+															-
+															{{ reservation.user.email }}
+														{% endif %}
+													</li>
+													<a class="btn btn-outline-danger btn-sm ms-auto" href="{{ path('reservation_cancel', {'id': reservation.id}) }}">Annuler la réservation</a>
+													<a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_devis', {'id': reservation.id}) }}">Générer le devis</a>
+												{% endif %}
+											{% endfor %}
+										</ul>
+										{# endregion #}
+
+										{# region Statut Confirmé / Acompte Payé #}
+										<div class="mb-2">
+											<strong>Réservations confirmées :</strong>
+											{{ confirmedCount }}
+										</div>
+										<ul>
+											{% for reservation in ConfirmedStatus %}
+												{% if (reservation.product.id == product.id) and (reservation.isCompleted == 0) %}
+													<li class="border-bottom pb-2 mb-2">
+														Réservation ID:
+														{{ reservation.id }}
+														- pour un séjour du
+														{{ reservation.startDate|date('d/m/Y') }}
+														au
+														{{ reservation.endDate|date('d/m/Y') }}<br>
+														réservation faîte le
+														{{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }}
+														{% if reservation.user %}
+															par
+															{{ reservation.user.firstName }}
+															{{ reservation.user.lastName }}
+															-
+															{{ reservation.user.email }}
+														{% endif %}
+														<br>
+														réservation confirmée le
+														{{ reservation.confirmedAt|date('d/m/Y H:i:s', 'Europe/Paris') }}
+														avec versement de l'acompte
+														{% if reservation.confirmedBy %}
+															par
+															{{ reservation.confirmedBy.firstName }}
+															{{ reservation.confirmedBy.lastName }}
+														{% else %}
+															<span class="text-muted">Utilisateur inconnu</span>
+														{% endif %}
+													</li>
+													<a class="btn btn-outline-danger btn-sm ms-auto" href="{{ path('reservation_cancel', {'id': reservation.id}) }}">Annuler la réservation</a>
+													<a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_deposit_bill', {'id': reservation.id}) }}">Générer la facture d'accompte</a>
+												{% endif %}
+											{% endfor %}
+										</ul>
+										{# endregion #}
+
+										{# region Statut Annulé #}
+										<div class="mb-2">
+											<strong>Réservations annulées :</strong>
+											{{ cancelledCount }}
+										</div>
+										<ul>
+											{% for reservation in CancelledStatus %}
+												{% if reservation.product.id == product.id %}
+													<li class=" border-bottom pb-2 mb-2">
+														Réservation ID:
+														{{ reservation.id }}
+														- pour un séjour du
+														{{ reservation.startDate|date('d/m/Y') }}
+														au
+														{{ reservation.endDate|date('d/m/Y') }}<br>
+														réservation faîte le
+														{{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }}
+														{% if reservation.user %}
+															par
+															{{ reservation.user.firstName }}
+															{{ reservation.user.lastName }}
+															-
+															{{ reservation.user.email }}
+														{% endif %}
+														<br>
+														réservation annulée le
+														{{ reservation.cancelledAt|date('d/m/Y H:i:s', 'Europe/Paris') }}
+														par
+														{% if reservation.cancelledBy %}
+															par
+															{{ reservation.cancelledBy.firstName }}
+															{{ reservation.cancelledBy.lastName }}
+														{% else %}
+															<span class="text-muted">Automatique ou inconnu</span>
+														{% endif %}
+													</li>
+												{% endif %}
+											{% endfor %}
+										</ul>
+										{# endregion #}
+
+										{# region Statut Finalisé / Jour J paiement du restant dû  #}
+										<div class="mb-2">
+											<strong>Réservations finalisées :
+											</strong>
+											{{ finalisedCount }}
+										</div>
+										<ul>
+											{% for reservation in FinalisedStatus %}
+												{% if reservation.product.id == product.id %}
+													<li class="border-bottom pb-2 mb-2">
+														Réservation ID:
+														{{ reservation.id }}
+														- pour un séjour du
+														{{ reservation.startDate|date('d/m/Y') }}
+														au
+														{{ reservation.endDate|date('d/m/y') }}
+														<br>
+														réservation faîte le
+														{{ reservation.createdAT|date('d/m/Y H:i:s', 'Europe/Paris') }}
+														{% if reservation.user %}
+															par
+															{{ reservation.user.firstName }}
+															{{ reservation.user.lastName }}
+															-
+															{{ reservation.user.email }}
+														{% endif %}
+														<br>
+														réservation confirmée le
+														{{ reservation.confirmedAt|date('d/m/Y H:i:s', 'Europe/Paris') }}
+														avec versement de l'acompte par
+														{{ reservation.confirmedBy.firstName }}
+														{{ reservation.confirmedBy.lastName }}
+														Jour J,
+														{{ reservation.startDate|date('d/m/Y') }}
+														paiement du restant dû auprès du personnel.
+													</li>
+													<a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_bill', {'id': reservation.id}) }}">Générer la facture</a>
+												{% endif %}
+											{% endfor %}
+										</ul>
+										{# endregion #}
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+						<div class="d-flex justify-content-center ">
+							{{ knp_pagination_render(pagination) }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
