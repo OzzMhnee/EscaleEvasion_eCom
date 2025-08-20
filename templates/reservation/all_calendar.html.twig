@@ -216,7 +216,6 @@
 														{{ reservation.cancelledAt|date('d/m/Y H:i:s', 'Europe/Paris') }}
 														par
 														{% if reservation.cancelledBy %}
-															par
 															{{ reservation.cancelledBy.firstName }}
 															{{ reservation.cancelledBy.lastName }}
 														{% else %}
@@ -262,7 +261,7 @@
 														{{ reservation.confirmedBy.lastName }}
 														Jour J,
 														{{ reservation.startDate|date('d/m/Y') }}
-														paiement du restant dû auprès du personnel.
+														paiement du solde auprès du personnel.
 													</li>
 													<a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_bill', {'id': reservation.id}) }}">Générer la facture</a>
 												{% endif %}
