@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendrier des réservations
+{% endblock %}
+
+{% block body %}
+	<div class="parallax">
+		<div class="container">
+			<div class="row my-5 justify-content-center">
+				<div class="card p-4 bg-light bg-opacity-50" style="max-width: 1200px;">
+                    {% if products is not empty %}
+                        <h1>Résultats de la recherche pour <em>{{ query }}</em></h1>
+                        {% for product in products %}
+                            <div class="col d-flex align-items-stretch">
+                                <div class="card shadow-lg mb-4 w-100" style="background:rgba(255,255,255,0.97);">
+                                    {% set images = [] %}
+                                    {% if product.imageUrl %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.imageUrl}), 'label': 'Image principale'}]) %}{% endif %}
+                                    {% if product.image2 %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.image2}), 'label': 'Image 2'}]) %}{% endif %}
+                                    {% if product.image3 %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.image3}), 'label': 'Image 3'}]) %}{% endif %}
+                                    {% if product.image4 %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.image4}), 'label': 'Image 4'}]) %}{% endif %}
+                                    {% if product.image5 %}{% set images = images|merge([{'src': path('protected_img', {'filename': product.image5}), 'label': 'Image 5'}]) %}{% endif %}
+                                    <div id="carousel-{{ product.id }}" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner rounded-top" style="height:320px; background:#eee;">
+                                            {% for img in images %}
+                                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                                    <img src="{{ img.src }}" class="d-block w-100 h-100 object-fit-cover" alt="{{ img.label }}" style="max-height:320px;">
+                                                </div>
+                                            {% else %}
+                                                <div class="carousel-item active">
+                                                    <div class="d-flex align-items-center justify-content-center w-100 h-100" style="height:320px; background:#eee;">
+                                                        <span class="text-muted">Aucune image</span>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        {% if images|length > 1 %}
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ product.id }}" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon"></span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ product.id }}" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon"></span>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title text-primary">{{ product.name }}</h5>
+                                        <p class="card-text text-muted" style="min-height: 48px;">
+                                            {{ product.description|length > 120
+                                                ? product.description|slice(0, 120) ~ '...'
+                                                : product.description
+                                            }}
+                                        </p>
+                                        <ul class="list-unstyled mb-2">
+                                            <li><strong>Prix :</strong> {{ product.price }} € / nuit</li>
+                                            <li><strong>Ville :</strong> {{ product.city }}</li>
+                                            <li><strong>Sous-catégories :</strong>
+                                                {% for sub in product.subCategory %}
+                                                    {{ sub.name }}{% if not loop.last %}, {% endif %}
+                                                {% else %}
+                                                    <span class="text-muted">Aucune</span>
+                                                {% endfor %}
+                                            </li>
+                                        </ul>
+                                        <div class="mt-auto d-flex gap-2">
+                                            <a href="{{ path('app_user_product', {'id': product.id}) }}" class="btn btn-outline-primary w-100">Voir</a>
+                                            <a href="{{ path('app_reservation_new_user', {'id': product.id}) }}" class="btn btn-dark w-100">Réserver</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <h2>Aucun résultat trouvé pour <em>{{ query }}</em></h2>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
