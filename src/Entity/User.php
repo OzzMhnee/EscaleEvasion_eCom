@@ -45,13 +45,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Reservation>
      */
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'cancelled_by')]
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user')]
     private Collection $reservations;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'cancelledBy')]
+    private Collection $cancelledReservations;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'confirmedBy')]
+    private Collection $confirmedReservations;
 
     /**
      * @var Collection<int, ContactMessage>
      */
-    #[ORM\OneToMany(targetEntity: ContactMessage::class, mappedBy: 'answered_by')]
+    #[ORM\OneToMany(targetEntity: ContactMessage::class, mappedBy: 'answeredBy')]
     private Collection $contactMessages;
 
     public function __construct()

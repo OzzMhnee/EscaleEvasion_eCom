@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes messages{% endblock %}
+
+{% block body %}
+<div class="parallax">
+    <div class="container my-5">
+        <div class="card p-4 bg-light bg-opacity-50" style="max-width: 900px; margin: 0 auto;">
+            <h2 class="mb-4 text-center">Mes messages envoyés au site</h2>
+            <div class="accordion" id="accordionUserMessages">
+                {% for message in messages %}
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header" id="heading-{{ message.id }}">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ message.id }}" aria-expanded="false" aria-controls="collapse-{{ message.id }}">
+                                {{ message.createdAt|date('d/m/Y H:i') }}
+                                {% if message.answerContent %}
+                                    {% if message.isRead %}
+                                        <span class="badge bg-success ms-3">Réponse lue</span>
+                                    {% else %}
+                                        <span class="badge bg-warning ms-3">Réponse non lue</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary ms-3">En attente de réponse</span>
+                                {% endif %}
+                            </button>
+                        </h2>
+                        <div id="collapse-{{ message.id }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ message.id }}" data-bs-parent="#accordionUserMessages">
+                            <div class="accordion-body">
+                                <div class="mb-2">
+                                    <strong>Votre message :</strong><br>
+                                    <span class="text-dark">{{ message.message }}</span>
+                                </div>
+                                {% if message.productName %}
+                                    <div class="mb-2">
+                                        <strong>À propos du logement :</strong> {{ message.productName }}
+                                    </div>
+                                {% endif %}
+                                <div class="mb-2">
+                                    <strong>Envoyé le :</strong> {{ message.createdAt|date('d/m/Y H:i') }}
+                                </div>
+                                {% if message.answerContent %}
+                                    <div class="mb-2">
+                                        <strong>Réponse du site :</strong><br>
+                                        <div class="border rounded p-2 bg-white" style="white-space:pre-line;">{{ message.answerContent }}</div>
+                                        <strong>Répondu le :</strong> {{ message.answeredAt|date('d/m/Y H:i') }}<br>
+                                        {% if not message.isRead %}
+                                            <form method="post" action="{{ path('user_message_read', {'id': message.id}) }}">
+                                                <button type="submit" class="btn btn-success btn-sm mt-2">Marquer comme lu</button>
+                                            </form>
+                                        {% else %}
+                                            <span class="text-success">Lu le {{ message.readAt|date('d/m/Y H:i') }}</span>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-info mt-2">Aucune réponse pour le moment.</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info text-center">Aucun message envoyé pour le moment.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

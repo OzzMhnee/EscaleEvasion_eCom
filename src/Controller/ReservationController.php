@@ -30,6 +30,25 @@ class ReservationController extends AbstractController
     }
     //endregion
 
+    //region Confirmation du paiement sur place (éditeur/admin)
+    #[Route('/confirm-on-site/{id}', name: 'reservation_confirm_on_site', methods: ['POST'])]
+    public function confirmOnSite(Reservation $reservation, EntityManagerInterface $em, Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+        if ($this->isCsrfTokenValid('confirmonsite' . $reservation->getId(), $request->request->get('_token'))) {
+            $reservation->setStatus('confirmée');
+            $reservation->setIsCompleted(false);
+            $reservation->setConfirmedAt(new \DateTimeImmutable());
+            $reservation->setConfirmedBy($this->getUser());
+            $em->flush();
+            $this->addFlash('success', 'Le paiement sur place a bien été confirmé et la réservation est repassée au statut "confirmée".');
+        } else {
+            $this->addFlash('danger', 'Token CSRF invalide.');
+        }
+        return $this->redirectToRoute('app_reservation_all_calendar');
+    }
+    //endregion
+
     //region Liste de toutes les réservations
     #[Route('/products/calendar', name: 'app_reservation_all_calendar', methods: ['GET'])]
     public function allCalendar(PaginatorInterface $paginator, Request $request, ReservationRepository $reservationRepository, ProductRepository $productRepository, EntityManagerInterface $entityManager): Response
@@ -90,7 +109,7 @@ class ReservationController extends AbstractController
 
         $reservation->setCancelledBy($this->getUser());
         $reservation->setStatus('annulée');
-        
+
         $em->flush();
 
         $this->addFlash('success', 'La réservation a bien été annulée.');

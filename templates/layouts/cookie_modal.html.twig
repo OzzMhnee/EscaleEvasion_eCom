@@ -1,0 +1,151 @@
+<div class="modal fade show" id="cookieConsentModal" tabindex="-1" aria-labelledby="cookieConsentLabel" aria-modal="true" role="dialog" style="display: none; background:rgba(0,0,0,0.7);">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="z-index:20000;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cookieConsentLabel">Gestion des cookies</h5>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Ce site utilise des cookies pour assurer son bon fonctionnement et améliorer votre expérience. Vous pouvez choisir d'accepter tous les cookies, n'accepter que les cookies nécessaires, ou refuser.
+                </p>
+                <ul>
+                    <li><strong>Cookies nécessaires :</strong> indispensables au fonctionnement du site.</li>
+                    <li><strong>Cookies de mesure d'audience :</strong> (optionnels) pour améliorer le service.</li>
+                </ul>
+                </div>
+            <div class="modal-footer d-flex flex-column gap-2">
+                <button type="button" class="btn btn-success w-100" id="cookieAcceptAll">Tout accepter</button>
+                <button type="button" class="btn btn-primary w-100" id="cookieAcceptNecessary">Accepter uniquement les cookies nécessaires</button>
+                <button type="button" class="btn btn-danger w-100" id="cookieRefuseAll">Tout refuser</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+(function() {
+    function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    }
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+    function showModal() {
+        var modal = document.getElementById('cookieConsentModal');
+        modal.style.display = 'block';
+        modal.classList.add('show');
+        document.body.classList.add('modal-open');
+        // Empêche toute interaction avec le reste de la page
+        document.body.style.overflow = 'hidden';
+        // Désactive tous les liens et boutons hors modale
+        document.querySelectorAll('a, button, input, select, textarea').forEach(function(el) {
+            if (!modal.contains(el)) {
+                el.setAttribute('tabindex', '-1');
+                el.setAttribute('aria-disabled', 'true');
+                el.style.pointerEvents = 'none';
+            }
+        });
+    }
+    function hideModal() {
+        var modal = document.getElementById('cookieConsentModal');
+        modal.style.display = 'none';
+        modal.classList.remove('show');
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        // Réactive tous les liens et boutons
+        document.querySelectorAll('a, button, input, select, textarea').forEach(function(el) {
+            el.removeAttribute('tabindex');
+            el.removeAttribute('aria-disabled');
+            el.style.pointerEvents = '';
+        });
+    }
+    if (!getCookie('cookie_consent')) {
+        document.addEventListener('DOMContentLoaded', showModal);
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        var acceptAll = document.getElementById('cookieAcceptAll');
+        var acceptNecessary = document.getElementById('cookieAcceptNecessary');
+        var refuseAll = document.getElementById('cookieRefuseAll');
+        if (acceptAll) acceptAll.onclick = function() {
+            setCookie('cookie_consent', 'all', 365);
+            hideModal();
+        };
+        if (acceptNecessary) acceptNecessary.onclick = function() {
+            setCookie('cookie_consent', 'necessary', 365);
+            hideModal();
+        };
+        if (refuseAll) refuseAll.onclick = function() {
+            setCookie('cookie_consent', 'refuse', 365);
+            hideModal();
+        };
+    });
+})();
+</script>
+<style>
+#cookieConsentModal {
+    display: none;
+    background: rgba(0,0,0,0.7) !important;
+}
+#cookieConsentModal.show {
+    display: block !importan<<<<<<< SEARCH
+    if (!getCookie('cookie_consent')) {
+        document.addEventListener('DOMContentLoaded', showModal);
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        var acceptAll = document.getElementById('cookieAcceptAll');
+        var acceptNecessary = document.getElementById('cookieAcceptNecessary');
+        var refuseAll = document.getElementById('cookieRefuseAll');
+        if (acceptAll) acceptAll.onclick = function() {
+            setCookie('cookie_consent', 'all', 365);
+            hideModal();
+        };
+        if (acceptNecessary) acceptNecessary.onclick = function() {
+            setCookie('cookie_consent', 'necessary', 365);
+            hideModal();
+        };
+        if (refuseAll) refuseAll.onclick = function() {
+            setCookie('cookie_consent', 'refuse', 365);
+            hideModal();
+        };
+    });
+=======
+    // Correction : on ne doit afficher la modale que si le cookie n'est PAS déjà défini
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!getCookie('cookie_consent')) {
+            showModal();
+        }
+        var acceptAll = document.getElementById('cookieAcceptAll');
+        var acceptNecessary = document.getElementById('cookieAcceptNecessary');
+        var refuseAll = document.getElementById('cookieRefuseAll');
+        if (acceptAll) acceptAll.onclick = function() {
+            setCookie('cookie_consent', 'all', 365);
+            hideModal();
+        };
+        if (acceptNecessary) acceptNecessary.onclick = function() {
+            setCookie('cookie_consent', 'necessary', 365);
+            hideModal();
+        };
+        if (refuseAll) refuseAll.onclick = function() {
+            setCookie('cookie_consent', 'refuse', 365);
+            hideModal();
+        };
+    });
+>>>>>>> REPLACE
+t;
+}
+.modal-backdrop {
+    display: none !important;
+}
+</style>

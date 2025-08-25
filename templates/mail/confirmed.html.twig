@@ -1,0 +1,142 @@
+
+{% block body %}
+<style>
+    .deposit-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+    }
+    .deposit-logo {
+        width: 140px;
+        height: auto;
+    }
+    .deposit-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #222;
+        text-align: right;
+    }
+    .deposit-section-title {
+        color: #0d6efd;
+        font-size: 1.1rem;
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+    .deposit-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+    }
+    .deposit-table th, .deposit-table td {
+        border: 1px solid #bbb;
+        padding: 8px 12px;
+        text-align: left;
+    }
+    .deposit-table thead {
+        background: #f2f2f2;
+    }
+    .deposit-table tbody tr:nth-child(odd){
+        background: #f9f9f9;
+    }
+    .deposit-summary {
+        margin-top: 2rem;
+        font-size: 1.1rem;
+    }
+    .deposit-nota {
+        margin-top: 2.5rem;
+        background: #fff3cd;
+        border: 1px solid #ffeeba;
+        color: #856404;
+        padding: 1.2rem 1.5rem;
+        border-radius: 6px;
+        font-size: 1.05rem;
+    }
+</style>
+
+<div class="container">
+    <div class="deposit-header">
+        <div>
+            {# <img src="file:///{{ (project_dir ~ '/public/img/GrandLogoDark.png')|replace({'\\':'/'}) }}" alt="Logo Escale Evasion" class="deposit-logo"> #}
+        </div>
+        <div class="deposit-title">
+            Facture d'acompte<br>
+            <span style="font-size:1.1rem; color:#666;">N° {{ reservation.id }}</span>
+        </div>
+    </div>
+    <div>
+        <strong>Date d'édition :</strong> {{ "now"|date('d/m/Y') }}<br>
+        <strong>Date de la réservation :</strong> {{ reservation.createdAt|date('d/m/Y') }}
+    </div>
+
+    <div class="deposit-section-title">Coordonnées du client</div>
+    <table class="deposit-table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Adresse</th>
+                <th>Code Postal</th>
+                <th>Ville</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ reservation.user.lastName }}</td>
+                <td>{{ reservation.user.firstName }}</td>
+                <td>{{ reservation.user.email }}</td>
+                <td>{{ reservation.user.phone }}</td>
+                <td>{{ reservation.user.billingAddressLine1 }}</td>
+                <td>{{ reservation.user.billingAddressPostalCode }}</td>
+                <td>{{ reservation.user.billingAddressCity }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="deposit-section-title">Détails de la réservation</div>
+    <table class="deposit-table">
+        <thead>
+            <tr>
+                <th>Logement</th>
+                <th>Adresse</th>
+                <th>Dates du séjour</th>
+                <th>Nombre de nuits</th>
+                <th>Prix par nuit</th>
+                <th>Montant de l'acompte (10%)</th>
+                <th>Total séjour</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ reservation.product.name }}</td>
+                <td>{{ reservation.product.city }}</td>
+                <td>
+                    du {{ reservation.startDate|date('d/m/Y') }}<br>
+                    au {{ reservation.endDate|date('d/m/Y') }}
+                </td>
+                {% set nights = (reservation.endDate|date('U') - reservation.startDate|date('U')) // 86400 %}
+                <td>{{ nights }}</td>
+                <td>{{ reservation.product.price }} €</td>
+                {% set acompte = (reservation.product.price * nights * 0.10)|round(2, 'floor') %}
+                <td>{{ acompte }} €</td>
+                {% set total = reservation.product.price * nights %}
+                <td>{{ total }} €</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="deposit-summary">
+        <strong>Acompte versé en date du {{ reservation.confirmedAt|date ('d/m/Y')}} d'un montant de :</strong> {{ acompte }} €<br>
+        <strong>Restant à verser pour le séjour :</strong> {{ total - acompte }} €
+    </div>
+
+    <div class="deposit-nota">
+        <strong>Nota :</strong><br>
+        Cette facture d'acompte atteste du versement partiel pour la réservation du séjour. Le solde restant sera à régler selon les modalités précisées lors de la confirmation.<br>
+        <em>L'équipe Escale Evasion vous remercie pour votre confiance.</em>
+    </div>
+</div>
+{% endblock %}

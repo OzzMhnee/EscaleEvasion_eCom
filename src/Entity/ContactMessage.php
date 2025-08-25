@@ -2,9 +2,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Dom\Text;
-
 #[ORM\Entity]
+#[ORM\Table(name: "contact_message")]
 class ContactMessage
 {
     #[ORM\Id]
@@ -33,17 +32,20 @@ class ContactMessage
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $read_At = null;
+    #[ORM\Column(name: "read_at", nullable: true)]
+    private ?\DateTimeImmutable $readAt = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $answered_at = null;
+    private ?\DateTimeImmutable $answeredAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'contactMessages')]
-    private ?User $answered_by = null;
+    private ?User $answeredBy = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $answer_content = null;
+    #[ORM\Column(name: "answer_content", type: 'text', nullable: true)]
+    private ?string $answerContent = null;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isRead = false;
 
     // Getters and setters
 
@@ -129,51 +131,55 @@ class ContactMessage
         return $this;
     }
 
+    // Utiliser uniquement la version camelCase pour readAt
     public function getReadAt(): ?\DateTimeImmutable
     {
-        return $this->read_At;
+        return $this->readAt;
     }
 
-    public function setReadAt(?\DateTimeImmutable $read_At): static
+    public function setReadAt(?\DateTimeImmutable $readAt): static
     {
-        $this->read_At = $read_At;
+        $this->readAt = $readAt;
 
         return $this;
     }
 
     public function getAnsweredAt(): ?\DateTimeImmutable
     {
-        return $this->answered_at;
+        return $this->answeredAt;
     }
 
-    public function setAnsweredAt(?\DateTimeImmutable $answered_at): static
+    public function setAnsweredAt(?\DateTimeImmutable $answeredAt): static
     {
-        $this->answered_at = $answered_at;
+        $this->answeredAt = $answeredAt;
 
         return $this;
     }
 
     public function getAnsweredBy(): ?User
     {
-        return $this->answered_by;
+        return $this->answeredBy;
     }
 
-    public function setAnsweredBy(?User $answered_by): static
+    public function setAnsweredBy(?User $answeredBy): static
     {
-        $this->answered_by = $answered_by;
+        $this->answeredBy = $answeredBy;
 
         return $this;
     }
 
     public function getAnswerContent(): ?string
     {
-        return $this->answer_content;
+        return $this->answerContent;
     }
 
-    public function setAnswerContent(?string $answer_content): self
+    public function setAnswerContent(?string $answerContent): self
     {
-        $this->answer_content = $answer_content;
+        $this->answerContent = $answerContent;
 
         return $this;
     }
+
+    public function isRead(): bool { return $this->isRead; }
+    public function setIsRead(bool $isRead): self { $this->isRead = $isRead; return $this; }
 }

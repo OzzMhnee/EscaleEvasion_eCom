@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+{% block title %}Messages utilisateurs
+{% endblock %}
+{% block body %}
+	<div class="parallax">
+		<div class="container my-5">
+			<div class="card p-4 bg-light bg-opacity-50" style="max-width: 1000px; margin: 0 auto;">
+				<h2 class="mb-4 text-center">Messages utilisateurs</h2>
+				<div class="accordion" id="accordionMessages">
+					{% for message in messages %}
+						<div class="accordion-item mb-3">
+							<h2 class="accordion-header" id="heading-{{ message.id }}">
+								<button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ message.id }}" aria-expanded="false" aria-controls="collapse-{{ message.id }}" data-firstname="{{ message.firstName|e('html_attr') }}" data-lastname="{{ message.lastName|e('html_attr') }}">
+									{{ message.firstName }}
+									{{ message.lastName }}
+									({{ message.email }}) -
+									{{ message.createdAt|date('d/m/Y H:i') }}
+									{% if message.answeredAt %}
+										<span class="badge bg-success ms-3">Répondu</span>
+									{% else %}
+										<span class="badge bg-warning ms-3">En attente</span>
+									{% endif %}
+								</button>
+							</h2>
+							<div id="collapse-{{ message.id }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ message.id }}" data-bs-parent="#accordionMessages">
+								<div class="accordion-body">
+									<div class="mb-2">
+										<strong>Message :</strong><br>
+										<span class="text-dark">{{ message.message }}</span>
+									</div>
+									{% if message.productName %}
+										<div class="mb-2">
+											<strong>À propos du logement :</strong>
+											{{ message.productName }}
+										</div>
+									{% endif %}
+									<div class="mb-2">
+										<strong>Envoyé le :</strong>
+										{{ message.createdAt|date('d/m/Y H:i') }}
+									</div>
+									{% if message.answeredAt %}
+										<div class="mb-2">
+											<strong>Réponse envoyée le :</strong>
+											{{ message.answeredAt|date('d/m/Y H:i') }}<br>
+											<strong>Réponse :</strong><br>
+											<div class="border rounded p-2 bg-white">{{ message.answerContent }}</div>
+										</div>
+									{% else %}
+										<form method="post" action="{{ path('admin_message_reply', {'id': message.id}) }}">
+											<div class="mb-3">
+												<label for="answer_content_{{ message.id }}" class="form-label">Votre réponse :</label>
+												<textarea name="answer_content" id="answer_content_{{ message.id }}" class="form-control" rows="3" placeholder="... votre réponse ici ..."></textarea>
+											</div>
+											<div class="mb-3">
+												<label for="predefined_id_{{ message.id }}" class="form-label">Texte pré-formulé :</label>
+												<select name="predefined_id" id="predefined_id_{{ message.id }}" class="form-select" onchange="insertPredefinedAnswer(this, 'answer_content_{{ message.id }}')">
+													<option value="" data-content="">-- Choisir un texte --</option>
+													{% for predefined in predefinedAnswers %}
+														<option value="{{ predefined.id }}" data-content="{{ predefined.content|e('html_attr') }}">{{ predefined.title }}</option>
+													{% endfor %}
+												</select>
+											</div>
+											<button type="submit" class="btn btn-dark">Envoyer la réponse</button>
+										</form>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					{% else %}
+						<div class="alert alert-info text-center">Aucun message utilisateur pour le moment.</div>
+					{% endfor %}
+					{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR') %}
+                        <div class="d-flex justify-content-center mt-4 gap-2">
+                            <a href="{{ path('app_predefined_answer_new') }}" class="btn btn-dark text-white px-4">Ajouter un message prédéfini</a>
+                            <a href="{{ path('app_predefined_answer_index') }}" class="btn btn-light text-dark px-4">Aller à la liste des messages prédéfinis</a>
+                        </div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+function insertPredefinedAnswer(select, textareaId) {
+    var textarea = document.getElementById(textareaId);
+    var selected = select.options[select.selectedIndex];
+    var content = selected.getAttribute('data-content');
+    if (selected.value && content) {
+        // Décodage des entités HTML
+        content = decodeHTMLEntities(content);
+
+        // Récupère dynamiquement le prénom et le nom du message affiché
+        var accordionItem = textarea.closest('.accordion-item');
+        var headerBtn = accordionItem ? accordionItem.querySelector('.accordion-button') : null;
+        var messageFirstName = '';
+        var messageLastName = '';
+        if (headerBtn && headerBtn.dataset) {
+            messageFirstName = headerBtn.getAttribute('data-firstname') || '';
+            messageLastName = headerBtn.getAttribute('data-lastname') || '';
+        }
+
+        // Remplacement des variables dans le texte prédéfini
+        content = content.split('%PRENOM%').join(messageFirstName);
+        content = content.split('%NOM%').join(messageLastName);
+
+        textarea.value = content;
+    }
+}
+function decodeHTMLEntities(text) {
+    var txt = document.createElement('textarea');
+    txt.innerHTML = text;
+    return txt.value;
+}
+</script>
+{% endblock %}

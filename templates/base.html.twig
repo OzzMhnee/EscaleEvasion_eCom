@@ -14,8 +14,8 @@
 				{{ importmap('app') }}
 			{% endblock %}
 		{% endblock %}
-		<script> // Gestion des backgrounds
-			document.addEventListener('DOMContentLoaded', function() {
+		<script> // Gestion des backgrounds compatible Turbo
+			function setRandomBackground() {
 				const backgrounds = [
 					'/protected-bg/backgroundParallax.png',
 					'/protected-bg/backgroundParallax2.png',
@@ -25,15 +25,16 @@
 					//....
 				];
 				const idx = Math.floor(Math.random() * backgrounds.length);
-				// Application à tous les éléments .parallax
 				document.querySelectorAll('.parallax').forEach(function(el) {
 					el.style.backgroundImage = "url('" + backgrounds[idx] + "')";
 				});
-			});
+			}
+			document.addEventListener('DOMContentLoaded', setRandomBackground);
+			document.addEventListener('turbo:load', setRandomBackground);
 			// document.addEventListener('DOMContentLoaded', disableImageProtection);
 		</script>
 	</head>
-	
+
 	<script> // Désactive le clic droit sur les images
 		// Pour empêcher le clic droit et le glisser-déposer sur les images
 		// Cela peut être utilisé pour protéger les images contre le téléchargement direct
@@ -49,7 +50,7 @@
 			});
 		});
 	</script>
-	
+
 	<body>
 		{% block nav %}
 			{% include 'layouts/navbar.html.twig' %}
@@ -60,7 +61,9 @@
 		{% endblock %}
 
 		{% block body %} {% endblock %}
-		
+
+		{% include 'layouts/cookie_modal.html.twig' %}
+
 		{% block footer %}
 			{% include 'layouts/footer.html.twig' %}
 		{% endblock %}

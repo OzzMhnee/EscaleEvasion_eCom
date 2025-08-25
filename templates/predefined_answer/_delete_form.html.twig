@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('app_predefined_answer_delete', {'id': predefined_answer.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce message prédéfini ?');" style="display:inline;">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ predefined_answer.id) }}">
+    <button class="btn btn-outline-danger btn-sm">Supprimer</button>
+</form>

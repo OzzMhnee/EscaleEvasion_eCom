@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-    <style>
+	<style>
 		.Glogo {
 			width: 222px;
 			height: auto;
@@ -13,34 +13,81 @@
 			left: 50%;
 			transform: translateX(-50%);
 		}
-        .parallax-title {
+		.parallax-title {
 			position: absolute;
 			top: 50px;
 			left: 50%;
 			transform: translateX(-50%);
-            color: white;
-            font-size: 1.5rem;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-        }
-        @font-face {
-            font-family: 'MaPolicePerso';
-            src: url('/fonts/Italianno-Regular.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-        span {
+			color: white;
+			text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
             font-family: 'MaPolicePerso', Arial, sans-serif;
-            font-size: 3rem;
-        }
-    </style>
+			font-size: 3rem;
+		}
+		@font-face {
+			font-family: 'MaPolicePerso';
+			src: url('/fonts/Italianno-Regular.ttf') format('truetype');
+			font-weight: normal;
+			font-style: normal;
+		}
+		span {
 
-    <div class="parallax d-flex flex-column align-items-center ">
+		}
+	</style>
+
+	<div class="parallax d-flex flex-column align-items-center ">
 		<img class="Glogo" src="/img/GrandLogoLight.png" alt="">
-        <div class="parallax-title">
-            <span> Bienvenue sur Escale Evasion</span>
-        </div>
-		
-    </div>
+		<div class="parallax-title">
+			<span>
+				Bienvenue sur Escale Evasion</span>
+		</div>
+		<div class="card p-4 bg-light bg-opacity-50" style="max-width: 1300px; margin: 0 auto;">
+			<form method="get" action="{{ path('app_user_all_products') }}" class="d-flex flex-column align-items-center my-4">
+				<h2 class="mb-5">Recherche des disponibilités</h2>
+				<div class="col">
+					<input type="text" id="home_startDate" name="startDate" class="form-control" placeholder="Date d'arrivée" autocomplete="off">
+					<input type="text" id="home_endDate" name="endDate" class="form-control mt-2" placeholder="Date de départ" autocomplete="off">
+					<button type="submit" class="btn btn-dark justify-center mt-5">Voir les logements disponibles</button>
+				</div>
+			</form>
+		</div>
+	</div>
 
+
+	{# region Calendrier Flatpickr #}
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script>
+		var reservedRanges = {{ reservedRanges|json_encode|raw }};
+		function initFlatpickrHome() {
+			if (typeof flatpickr === 'undefined') {
+				console.error('Flatpickr n\'est pas chargé !');
+				return;
+			}
+			flatpickr("#home_startDate", {
+				disable: reservedRanges,
+				minDate: "today",
+				dateFormat: "Y-m-d"
+			});
+			flatpickr("#home_endDate", {
+				disable: reservedRanges,
+				minDate: "today",
+				dateFormat: "Y-m-d"
+			});
+		}
+		document.addEventListener('DOMContentLoaded', initFlatpickrHome);
+		document.addEventListener('turbo:load', initFlatpickrHome);
+	</script>
+	<style>
+		.flatpickr-day.disabled,
+		.flatpickr-day.disabled:hover {
+			background: #e0e0e0 !important;
+			color: #b0b0b0 !important;
+			text-decoration: line-through;
+			cursor: not-allowed;
+		}
+	</style>
+
+	{# endregion #}
 
 {% endblock %}

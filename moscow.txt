@@ -1,0 +1,35 @@
+TO DO LIST Méthode MoSCoW
+
+## MoSCoW
+M- Must (have)
+S - Should (have) : les mentions légales
+C - Could (have) : click and collect, support
+W - Won't (have)
+
+## TODO
+- Must :
+    V ->  HomePage : Ajouter un calendrier à renseigner par l'utilisateur qui renvoie aux locations disponibles à ces dates.
+    ->  Voir pourquoi j'ai un problème de turbo dans l'affichage de mon calendrier (calendrier par défault au premier chargement souvent)
+    V ->  Ajouter aux factures et mails les lignes, numéro de téléphone, adresses du client.
+    V ->  Ajouter au formulaire de réservation la ligne pour ajouter le numéro de téléphone en BDD.
+    V ->  Espace connexion mal centré
+    V ->  Créer pour les admin l'espace de réception des messages utilisateurs, accessible depuis la bar nav (icone message déjà présente)
+        Les messages client doivent être accessible sous forme d'accordéon (cf historique client pour style)
+        Lorsque l'admin clique sur répondre: création d'une zone de texte "... votre réponse ici ... ainsi que d'une liste déroulante permettrant d'intégrer un texte pré-formulé dans la zone de texte précédante en fonction du type de question client les plus posées et qui proviendront de la BDD
+        Les messages envoyés seront visible depuis ce nouveau twig. Les dates d'envoi de message et réponse au message seront sauvegardé et visible sur cette partie.
+    V -> Création d'une interface Admin pour créer les textes pré-formulés.
+    V -> Gérer par l'éditeur un bouton interractif dans l'historique des réservations pour passer les réservations au statut confirmé une fois le paiment sur place du restant du.
+    -> Ajouter dans le ReadMe si necessaire le : composer require symfony/security-core
+- Should :
+    ->  Cookie
+    ->  Faire une réflection complète du site pour gérer les droits du ROLE_EDITOR
+    ->  Gérer le responsive
+- Could :
+    -> Checker l'accessibilité mal/non voyants, contraste des couleurs
+    -> section review sur les retours client des produits/site
+    -> Take attention to référencement : meta-description
+    -> suppression utilisateur (comment anonymisé des utilisateurs ou supprimé tout ce qui est personnel dans le compte), ajouter un code de référence clients dans l'entité client,
+    -> ajouter le IsConfirmed pour l'adresse mail des clients
+    -> Admin/Produits Avoir la possibilité de modifier les tarifs par nuit en fonction de plages de dates précises (Saison haute...)
+- Won't :
+    -> Avoir les cdn dans nos dépendances (????? Je sais pas faire donc pas pour le moment)

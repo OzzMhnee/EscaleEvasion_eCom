@@ -23,6 +23,15 @@ class ReservationType extends AbstractType
             ->add('endDate', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Date de fin',
+            ])
+            ->add('phone', null, [
+                'label' => 'Numéro de téléphone',
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'placeholder' => '06 12 34 56 78',
+                    'class' => 'form-control'
+                ]
             ]);
 
         // Ajout d'une validation pour empêcher une date de fin antérieure à la date de début

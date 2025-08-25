@@ -262,6 +262,12 @@
 														Jour J,
 														{{ reservation.startDate|date('d/m/Y') }}
 														paiement du solde auprès du personnel.
+														{% if is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN') %}
+															<form method="post" action="{{ path('reservation_confirm_on_site', {'id': reservation.id}) }}" class="d-inline">
+																<input type="hidden" name="_token" value="{{ csrf_token('confirmonsite' ~ reservation.id) }}">
+																<button type="submit" class="btn btn-success btn-sm ms-2">Confirmer paiement sur place</button>
+															</form>
+														{% endif %}
 													</li>
 													<a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_bill', {'id': reservation.id}) }}">Générer la facture</a>
 												{% endif %}

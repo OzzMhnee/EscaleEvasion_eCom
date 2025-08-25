@@ -1,102 +1,110 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-  <div class="container">
-    <a class="navbar-brand" href="{{ path('app_home_page') }}">
-      <img src="/img/logoLight.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top"></a>
-    <a class="navbar-brand fw-bold" href="{{ path('app_home_page') }}">Escale Evasion</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      {% set categories = all_categories() %}
-      {% if categories|length > 0 %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Catégories</a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{ path('app_user_all_products') }}">Toutes les catégories</a></li>
-            {% for category in categories %}
-              {% if category.subCategories|length > 0 %}
-                <hr class="dropdown-divider">
-                <li><a class="dropdown-item text-dark categoryTitle" href="{{ path('app_user_category_products', {id: category.id}) }}">{{ category.name }}</a></li>
-                {% for subCategory in category.subCategories %}
-                <li><a class="dropdown-item text-secondary" href="{{ path('app_user_sub_category_products', {id: subCategory.id}) }}">    {{ subCategory.name }}</a></li>
-                {% endfor %}
-              {% endif %}
-            {% endfor %}
-          </ul>
-        </li>
-      {% endif %}
-      {% if is_granted("ROLE_ADMIN") %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
-          <ul class="dropdown-menu">
-            <li><a href="{{ path('app_category')}}" class="dropdown-item">Categories</a></li>
-            <li><a href="{{ path('app_category_add')}}" class="dropdown-item">Ajouter une Categorie</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a href="{{ path('app_sub_category_index')}}" class="dropdown-item">Sous-categories</a></li>
-            <li><a href="{{ path('app_sub_category_new')}}" class="dropdown-item">Ajouter une sous-categories</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a href="{{ path('app_product_index')}}" class="dropdown-item">Produits</a></li>
-            <li><a href="{{ path('app_product_new') }}" class="dropdown-item">Ajouter un produit</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a href="{{ path('app_user')}}" class="dropdown-item">Utilisateurs</a></li>
-            <li><a href="{{ path('app_reservation_all_calendar')}}" class="dropdown-item">Historique des réservations</a></li>
-          </ul>
-        </li>
-      {% endif %}
-      </ul>
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item me-2">
-          <a class="nav-link position-relative d-flex align-items-center" href="" title="Voir les messages utilisateurs">
-            {% set unreadMessagesCount = 0 %}
-            {% if app.session and app.user %}
-              {% set unreadMessagesCount = app.session.get('unread_messages_count', 0) %}
-            {% endif %}
-            <span class="badge rounded-pill bg-danger me-2" style="font-size:0.85rem; min-width:1.5em;">
-              {{ unreadMessagesCount }}
-            </span>
-            {# <img src="/img/new-messages.png" alt="cart" width="30" height="30" class="d-inline-block align-text-top"> #}
-            <img src="/img/no-messages.png" alt="cart" width="30" height="30" class="d-inline-block align-text-top">
-          </a>
-        </li>
-        <li class="nav-item me-2">
-          <a class="nav-link position-relative d-flex align-items-center" href="{{ path('app_cart') }}" title="Voir mon panier">
-            {% set cartCount = 0 %}
-            {% if app.session and app.user %}
-              {% set cartCount = app.session.get('cart_count', 0) %}
-            {% endif %}
-            <span class="badge rounded-pill bg-danger" style="font-size:0.85rem; min-width:1.5em;">
-              {{ cartCount }}
-            </span>
-            <img src="/img/cart.png" alt="cart" width="30" height="30" class="d-inline-block align-text-top">
-          </a>
-        </li>
-        <form class="d-flex" role="search" method="get" action="{{ path('app_search_results') }}">
-            <input type="search" class="form-control me-2" name="q" placeholder="Rechercher un produit" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Rechercher</button>
-        </form>
-        {% if app.user %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Mon compte</a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
-              <li><a class="dropdown-item" href="{{ path('app_user_profile') }}">Mon profil</a></li>
-              <li><a class="dropdown-item" href="{{ path('app_user_reservations') }}">Mes réservations</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{{ path('app_contact', {'id': app.user.id})}}">Nous contacter</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Me déconnecter</a></li>
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('app_home_page') }}">
+            <img src="/img/logoLight.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top"></a>
+        <a class="navbar-brand fw-bold" href="{{ path('app_home_page') }}">Escale Evasion</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% set categories = all_categories() %}
+                {% if categories|length > 0 %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Catégories</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ path('app_user_all_products') }}">Toutes les catégories</a></li>
+                        {% for category in categories %}
+                            {% if category.subCategories|length > 0 %}
+                                <hr class="dropdown-divider">
+                                <li><a class="dropdown-item text-dark categoryTitle" href="{{ path('app_user_category_products', {id: category.id}) }}">{{ category.name }}</a></li>
+                                {% for subCategory in category.subCategories %}
+                                <li><a class="dropdown-item text-secondary" href="{{ path('app_user_sub_category_products', {id: subCategory.id}) }}">    {{ subCategory.name }}</a></li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% if is_granted("ROLE_ADMIN") %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('app_category')}}" class="dropdown-item">Categories</a></li>
+                            <li><a href="{{ path('app_category_add')}}" class="dropdown-item">Ajouter une Categorie</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="{{ path('app_sub_category_index')}}" class="dropdown-item">Sous-categories</a></li>
+                            <li><a href="{{ path('app_sub_category_new')}}" class="dropdown-item">Ajouter une sous-categories</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="{{ path('app_product_index')}}" class="dropdown-item">Produits</a></li>
+                            <li><a href="{{ path('app_product_new') }}" class="dropdown-item">Ajouter un produit</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="{{ path('app_user')}}" class="dropdown-item">Utilisateurs</a></li>
+                            <li><a href="{{ path('app_reservation_all_calendar')}}" class="dropdown-item">Historique des réservations</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
             </ul>
-          </li>
-        {% else %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ path('app_register') }}">S'inscrire</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ path('app_login') }}">Se connecter</a>
-          </li>
-        {% endif %}
-      </ul>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item me-2">
+                    {% set unreadMessagesCount = 0 %}
+                    {% if app.session and app.user %}
+                        {% set unreadMessagesCount = app.session.get('unread_messages_count', 0) %}
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR') %}
+                        <a class="nav-link position-relative d-flex align-items-center" href="{{ path('admin_messages') }}" title="Voir les messages utilisateurs">
+                            <span class="badge rounded-pill bg-danger me-2" style="font-size:0.85rem; min-width:1.5em;">
+                                {{ unreadMessagesCount }}
+                            </span>
+                            <img src="/img/{% if unreadMessagesCount > 0 %}new-messages.png{% else %}no-messages.png{% endif %}" alt="messages" width="30" height="30" class="d-inline-block align-text-top">
+                        </a>
+                    {% elseif app.user %}
+                        <a class="nav-link position-relative d-flex align-items-center" href="{{ path('user_messages') }}" title="Voir mes messages">
+                            <span class="badge rounded-pill bg-danger me-2" style="font-size:0.85rem; min-width:1.5em;">
+                                {{ unreadMessagesCount }}
+                            </span>
+                            <img src="/img/{% if unreadMessagesCount > 0 %}new-messages.png{% else %}no-messages.png{% endif %}" alt="messages" width="30" height="30" class="d-inline-block align-text-top">
+                        </a>
+                    {% endif %}
+                </li>
+                <li class="nav-item me-2">
+                    <a class="nav-link position-relative d-flex align-items-center" href="{{ path('app_cart') }}" title="Voir mon panier">
+                        {% set cartCount = 0 %}
+                        {% if app.session and app.user %}
+                            {% set cartCount = app.session.get('cart_count', 0) %}
+                        {% endif %}
+                        <span class="badge rounded-pill bg-danger" style="font-size:0.85rem; min-width:1.5em;">
+                            {{ cartCount }}
+                        </span>
+                        <img src="/img/cart.png" alt="cart" width="30" height="30" class="d-inline-block align-text-top">
+                    </a>
+                </li>
+                <form class="d-flex" role="search" method="get" action="{{ path('app_search_results') }}">
+                    <input type="search" class="form-control me-2" name="q" placeholder="Rechercher un produit" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Rechercher</button>
+                </form>
+                {% if app.user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Mon compte</a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                            <li><a class="dropdown-item" href="{{ path('app_user_profile') }}">Mon profil</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_user_reservations') }}">Mes réservations</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ path('app_contact', {'id': app.user.id})}}">Nous contacter</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Me déconnecter</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">S'inscrire</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Se connecter</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>

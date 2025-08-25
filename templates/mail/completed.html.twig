@@ -1,0 +1,145 @@
+
+{% block body %}
+<style>
+    .bill-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+    }
+    .bill-logo {
+        width: 140px;
+        height: auto;
+    }
+    .bill-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #222;
+        text-align: right;
+    }
+    .bill-section-title {
+        color: #0d6efd;
+        font-size: 1.1rem;
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+    .bill-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+    }
+    .bill-table th, .bill-table td {
+        border: 1px solid #bbb;
+        padding: 8px 12px;
+        text-align: left;
+    }
+    .bill-table thead {
+        background: #f2f2f2;
+    }
+    .bill-table tbody tr:nth-child(odd){
+        background: #f9f9f9;
+    }
+    .bill-summary {
+        margin-top: 2rem;
+        font-size: 1.1rem;
+    }
+    .bill-nota {
+        margin-top: 2.5rem;
+        background: #e2f0d9;
+        border: 1px solid #b7e1cd;
+        color: #155724;
+        padding: 1.2rem 1.5rem;
+        border-radius: 6px;
+        font-size: 1.05rem;
+    }
+</style>
+
+<div class="container">
+    <div class="bill-header">
+        <div>
+            {# <img src="file:///{{ (project_dir ~ '/public/img/GrandLogoDark.png')|replace({'\\':'/'}) }}" alt="Logo Escale Evasion" class="bill-logo"> #}
+        </div>
+        <div class="bill-title">
+            Facture de location saisonnière<br>
+            <span style="font-size:1.1rem; color:#666;">N° {{ reservation.id }}</span>
+        </div>
+    </div>
+    <div>
+        <strong>Date d'édition :</strong> {{ "now"|date('d/m/Y') }}<br>
+        <strong>Date de la réservation :</strong> {{ reservation.createdAt|date('d/m/Y') }}
+    </div>
+
+    <div class="bill-section-title">Coordonnées du client</div>
+    <table class="bill-table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Adresse</th>
+                <th>Code Postal</th>
+                <th>Ville</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ reservation.user.lastName }}</td>
+                <td>{{ reservation.user.firstName }}</td>
+                <td>{{ reservation.user.email }}</td>
+                <td>{{ reservation.user.phone }}</td>
+                <td>{{ reservation.user.billingAddressLine1 }}</td>
+                <td>{{ reservation.user.billingAddressPostalCode }}</td>
+                <td>{{ reservation.user.billingAddressCity }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="bill-section-title">Détails de la réservation</div>
+    <table class="bill-table">
+        <thead>
+            <tr>
+                <th>Logement</th>
+                <th>Adresse</th>
+                <th>Dates du séjour</th>
+                <th>Nombre de nuits</th>
+                <th>Prix par nuit</th>
+                <th>Taxe de séjour (5%)</th>
+                <th>Total séjour</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ reservation.product.name }}</td>
+                <td>{{ reservation.product.city }}</td>
+                <td>
+                    du {{ reservation.startDate|date('d/m/Y') }}<br>
+                    au {{ reservation.endDate|date('d/m/Y') }}
+                </td>
+                {% set nights = (reservation.endDate|date('U') - reservation.startDate|date('U')) // 86400 %}
+                <td>{{ nights }}</td>
+                <td>{{ reservation.product.price }} €</td>
+                {% set taxe = (reservation.product.price * nights * 0.05)|round(2, 'floor') %}
+                <td>{{ taxe }} €</td>
+                {% set total = reservation.product.price * nights + taxe %}
+                <td>{{ total }} €</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="bill-summary">
+        {% set acompte = (reservation.product.price * nights * 0.10)|round(2, 'floor') %}
+        <strong>Total réglé pour le séjour :</strong> {{ total }} €
+        <br>
+        dont {{ acompte }} € réglé le {{ reservation.confirmedAt|date('d/m/Y') }}
+
+    </div>
+
+    <div class="bill-nota">
+        <strong>Merci pour votre confiance !</strong><br>
+        Cette facture atteste du paiement complet du séjour. Nous restons à votre disposition pour toute question ou information complémentaire.<br>
+        <em>L'équipe Escale Evasion</em>
+    </div>
+</div>
+{% endblock %}

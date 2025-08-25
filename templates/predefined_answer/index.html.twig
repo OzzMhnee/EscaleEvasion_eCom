@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Messages prédéfinis{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+function enableEdit(id) {
+    document.getElementById('content-display-' + id).classList.add('d-none');
+    document.getElementById('content-form-' + id).classList.remove('d-none');
+    document.getElementById('btn-edit-' + id).classList.add('d-none');
+}
+function cancelEdit(id) {
+    document.getElementById('content-form-' + id).classList.add('d-none');
+    document.getElementById('content-display-' + id).classList.remove('d-none');
+    document.getElementById('btn-edit-' + id).classList.remove('d-none');
+}
+</script>
+{% endblock %}
+
+{% block body %}
+    <div class="parallax">
+        <div class="container my-5">
+            <div class="card p-4 bg-light bg-opacity-50" style="max-width: 900px; margin: 0 auto;">
+                <h2 class="mb-4 text-center">Liste des messages prédéfinis</h2>
+                <div class="accordion" id="accordionPredefinedAnswers">
+                    {% for predefined_answer in predefined_answers %}
+                        <div class="accordion-item mb-3">
+                            <h2 class="accordion-header" id="heading-predef-{{ predefined_answer.id }}">
+                                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-predef-{{ predefined_answer.id }}" aria-expanded="false" aria-controls="collapse-predef-{{ predefined_answer.id }}">
+                                    {{ predefined_answer.title }}
+                                    <span class="badge bg-secondary ms-3">ID {{ predefined_answer.id }}</span>
+                                </button>
+                            </h2>
+                            <div id="collapse-predef-{{ predefined_answer.id }}" class="accordion-collapse collapse" aria-labelledby="heading-predef-{{ predefined_answer.id }}" data-bs-parent="#accordionPredefinedAnswers">
+                                <div class="accordion-body">
+                                    <div class="mb-2">
+                                        <strong>Contenu du message prédéfini :</strong>
+                                        <div class="border rounded p-2 bg-white" style="white-space:pre-line;" id="content-display-{{ predefined_answer.id }}">{{ predefined_answer.content }}</div>
+                                        <form method="post" action="{{ path('app_predefined_answer_edit', {'id': predefined_answer.id}) }}" class="d-none" id="content-form-{{ predefined_answer.id }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('edit' ~ predefined_answer.id) }}">
+                                            <textarea name="content" class="form-control mb-2" rows="5" id="content-textarea-{{ predefined_answer.id }}">{{ predefined_answer.content }}</textarea>
+                                            <button type="submit" class="btn btn-success btn-sm me-2" id="btn-validate-{{ predefined_answer.id }}">Valider les modifications</button>
+                                            <button type="button" class="btn btn-secondary btn-sm" onclick="cancelEdit({{ predefined_answer.id }})">Annuler</button>
+                                        </form>
+                                    </div>
+                                    <div class="d-flex gap-2 mt-3">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-edit-{{ predefined_answer.id }}" onclick="enableEdit({{ predefined_answer.id }})">Modifier</button>
+                                        {{ include('predefined_answer/_delete_form.html.twig', { 'predefined_answer': predefined_answer }) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info text-center">Aucun message prédéfini pour le moment.</div>
+                    {% endfor %}
+                </div>
+                <div class="d-flex justify-content-center mt-4 gap-2">
+                    <a href="{{ path('app_predefined_answer_new') }}" class="btn btn-dark text-white px-4">Ajouter un message prédéfini</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

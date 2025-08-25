@@ -78,8 +78,10 @@
                 <th>Nom</th>
                 <th>Prénom</th>
                 <th>Email</th>
-                {# <th>Téléphone</th> #}
-                {# <th>Adresse</th> #}
+                <th>Téléphone</th>
+                <th>Adresse</th>
+                <th>Code Postal</th>
+                <th>Ville</th>
             </tr>
         </thead>
         <tbody>
@@ -87,8 +89,10 @@
                 <td>{{ reservation.user.lastName }}</td>
                 <td>{{ reservation.user.firstName }}</td>
                 <td>{{ reservation.user.email }}</td>
-                {# <td>{{ reservation.user.phone }}</td> #}
-                {# <td>{{ reservation.user.address }}</td> #}
+                <td>{{ reservation.user.phone }}</td>
+                <td>{{ reservation.user.billingAddressLine1 }}</td>
+                <td>{{ reservation.user.billingAddressPostalCode }}</td>
+                <td>{{ reservation.user.billingAddressCity }}</td>
             </tr>
         </tbody>
     </table>

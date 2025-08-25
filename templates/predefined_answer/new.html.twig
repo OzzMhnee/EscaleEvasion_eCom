@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un message prédéfini{% endblock %}
+
+{% block body %}
+    <style>
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+    <div class="parallax">
+        <div class="container">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="card p-4 bg-light bg-opacity-50" style="max-width: 700px;">
+                    <h1 class="text-center mb-4">Ajouter un message prédéfini</h1>
+                    {{ form_start(form) }}
+                        <div class="mb-3">
+                            {{ form_label(form.title, 'Titre du message', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.title, { 'attr': {'class': 'form-control text-center', "placeholder": "Titre du message prédéfini" } }) }}
+                            {{ form_errors(form.title) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.content, 'Contenu du message', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.content, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    "placeholder": "Contenu du message prédéfini... Utilisez %PRENOM% et %NOM% pour les variables. Utilisez \\n pour un retour à la ligne.",
+                                    "rows": 5
+                                }
+                            }) }}
+                            <div class="form-text">
+                                Pour insérer dynamiquement le prénom et le nom du client : <br>
+                                utilisez <strong>%PRENOM%</strong> et <strong>%NOM%</strong> dans votre texte.<br>
+                                <strong>Pour un retour à la ligne dans le message reçu par le client écrivez <code>\n</code> à l'endroit souhaité.</strong>
+                                <br>Exemple :<br>
+                                Bonjour %PRENOM% %NOM%, \n<br>
+                                Nous faisons suite à votre demande.<br>
+                            </div>
+                            {{ form_errors(form.content) }}
+                        </div>
+                        <div class="d-flex justify-content-center gap-2">
+                            <button type="submit" class="btn btn-dark text-white mt-3 px-4">Ajouter</button>
+                            <a href="{{ path('app_predefined_answer_index') }}" class="btn btn-light text-dark mt-3 px-4">Aller à la liste des messages prédéfinis</a>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

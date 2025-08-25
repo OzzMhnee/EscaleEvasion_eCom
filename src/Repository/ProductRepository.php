@@ -34,6 +34,23 @@ class ProductRepository extends ServiceEntityRepository
         // On exécute la requête et on retourne les résultats
         return $qb->getQuery()->getResult();
     }
+
+    public function findAvailableBetweenDatesQuery($startDate, $endDate)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere('p.isAvailable = true')
+            ->andWhere('NOT EXISTS (
+                SELECT 1 FROM App\Entity\Reservation r
+                WHERE r.product = p
+                  AND r.status IN (:statuses)
+                  AND r.startDate < :endDate
+                  AND r.endDate > :startDate
+            )')
+            ->setParameter('startDate', new \DateTime($startDate))
+            ->setParameter('endDate', new \DateTime($endDate))
+            ->setParameter('statuses', ['en attente', 'confirmée']);
+        return $qb->getQuery();
+    }
     //    /**
     //     * @return Product[] Returns an array of Product objects
     //     */

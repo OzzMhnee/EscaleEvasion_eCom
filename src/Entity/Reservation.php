@@ -24,7 +24,7 @@ class Reservation
     #[ORM\Column]
     private ?\DateTime $endDate = null;
 
-    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class)]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class, inversedBy: "reservations")]
     #[ORM\JoinColumn(nullable: false)]
     private ?\App\Entity\User $user = null;
 
@@ -40,11 +40,11 @@ class Reservation
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $confirmed_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'reservations')]
-    private ?User $cancelled_by = null;
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class, inversedBy: "cancelledReservations")]
+    private ?User $cancelledBy = null;
 
-    #[ORM\ManyToOne(inversedBy: 'reservations')]
-    private ?User $confirmed_by = null;
+    #[ORM\ManyToOne(targetEntity: \App\Entity\User::class, inversedBy: "confirmedReservations")]
+    private ?User $confirmedBy = null;
 
     #[ORM\Column]
     private ?bool $isCompleted = null;
@@ -154,24 +154,24 @@ class Reservation
 
     public function getCancelledBy(): ?User
     {
-        return $this->cancelled_by;
+        return $this->cancelledBy;
     }
 
-    public function setCancelledBy(?User $cancelled_by): static
+    public function setCancelledBy(?User $cancelledBy): static
     {
-        $this->cancelled_by = $cancelled_by;
+        $this->cancelledBy = $cancelledBy;
 
         return $this;
     }
 
     public function getConfirmedBy(): ?User
     {
-        return $this->confirmed_by;
+        return $this->confirmedBy;
     }
 
-    public function setConfirmedBy(?User $confirmed_by): static
+    public function setConfirmedBy(?User $confirmedBy): static
     {
-        $this->confirmed_by = $confirmed_by;
+        $this->confirmedBy = $confirmedBy;
 
         return $this;
     }

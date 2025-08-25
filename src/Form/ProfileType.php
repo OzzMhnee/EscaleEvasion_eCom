@@ -18,6 +18,14 @@ class ProfileType extends AbstractType
             ->add('email')
             ->add('first_name')
             ->add('last_name')
+            ->add('phone', null, [
+                'label' => 'Numéro de téléphone',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => '06 ## ## ## ##',
+                    'class' => 'form-control'
+                ]
+            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,

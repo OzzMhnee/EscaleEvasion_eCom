@@ -82,10 +82,10 @@ final class UserController extends AbstractController
     #[Route('/admin/user/uptoeditor/{id}', name: 'app_user_upToEditor')]
     public function updateUser(EntityManagerInterface $entityManager, User $user): Response
     {
-       $user->setRoles(['ROLE_EDITOR']);
-       $entityManager->flush();
-       $this->addFlash('messages', 'L\'utilisateur a été promu au rôle d\'éditeur avec succès!');
-       return $this->redirectToRoute('app_user');
+        $user->setRoles(['ROLE_EDITOR']);
+        $entityManager->flush();
+        $this->addFlash('messages', 'L\'utilisateur a été promu au rôle d\'éditeur avec succès!');
+        return $this->redirectToRoute('app_user');
     }
     //endregion
 
@@ -133,8 +133,14 @@ final class UserController extends AbstractController
     #[Route('/all-products', name: 'app_user_all_products')]
     public function allProducts(ProductRepository $productRepository, Request $request, PaginatorInterface $paginator): Response
     {
-        $query = $productRepository->createQueryBuilder('p')->getQuery(); // Crée une requête Doctrine pour récupérer tous les produits (p est l’alias de la table)
+        $startDate = $request->query->get('startDate');
+        $endDate = $request->query->get('endDate');
 
+        if ($startDate && $endDate) {
+            $query = $productRepository->findAvailableBetweenDatesQuery($startDate, $endDate);
+        } else {
+            $query = $productRepository->createQueryBuilder('p')->getQuery();
+        }
         $pagination = $paginator->paginate(  // Utilise le service KnpPaginator pour paginer la requête.
             $query, // Passe la requête Doctrine (pas le résultat, mais bien la requête elle-même)
             $request->query->getInt('page', 1), // Récupère le numéro de page dans l’URL (?page=2), ou 1 par défaut.
@@ -266,6 +272,16 @@ final class UserController extends AbstractController
                 $reservation->setCreatedAt(new \DateTimeImmutable());
                 if ($this->getUser()) {
                     $reservation->setUser($this->getUser());
+                    // Enregistre le téléphone saisi dans le formulaire dans l'utilisateur connecté
+                    $phone = $form->get('phone')->getData();
+                    if ($phone) {
+                        /** @var \App\Entity\User $user */
+                        $user = $this->getUser();
+                        if ($user instanceof \App\Entity\User) {
+                            $user->setPhone($phone);
+                            $entityManager->persist($user);
+                        }
+                    }
                 }
                 if (!$reservation->getStatus()) {
                     $reservation->setStatus('en attente');
