@@ -182,6 +182,7 @@
 													</li>
 													<a class="btn btn-outline-danger btn-sm ms-auto" href="{{ path('reservation_cancel', {'id': reservation.id}) }}">Annuler la réservation</a>
 													<a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_deposit_bill', {'id': reservation.id}) }}">Générer la facture d'accompte</a>
+													<a class="btn btn-outline-success btn-sm ms-auto" onclick="if(confirm('Etes vous certains de vouloir confirmer le paiement du restant dû ?')) { location.href='{{ path("app_reservation_completed", {"id": reservation.id}) }}'; }">Confirmer la réception du restant dû</a>
 												{% endif %}
 											{% endfor %}
 										</ul>
@@ -257,17 +258,16 @@
 														réservation confirmée le
 														{{ reservation.confirmedAt|date('d/m/Y H:i:s', 'Europe/Paris') }}
 														avec versement de l'acompte par
-														{{ reservation.confirmedBy.firstName }}
-														{{ reservation.confirmedBy.lastName }}
+														{% if reservation.confirmedBy %}
+															par
+															{{ reservation.confirmedBy.firstName }}
+															{{ reservation.confirmedBy.lastName }}
+														{% else %}
+															<span class="text-muted">Utilisateur inconnu</span>
+														{% endif %}
 														Jour J,
 														{{ reservation.startDate|date('d/m/Y') }}
 														paiement du solde auprès du personnel.
-														{% if is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN') %}
-															<form method="post" action="{{ path('reservation_confirm_on_site', {'id': reservation.id}) }}" class="d-inline">
-																<input type="hidden" name="_token" value="{{ csrf_token('confirmonsite' ~ reservation.id) }}">
-																<button type="submit" class="btn btn-success btn-sm ms-2">Confirmer paiement sur place</button>
-															</form>
-														{% endif %}
 													</li>
 													<a class="btn btn-outline-primary btn-sm ms-auto" href="{{ path('app_bill', {'id': reservation.id}) }}">Générer la facture</a>
 												{% endif %}

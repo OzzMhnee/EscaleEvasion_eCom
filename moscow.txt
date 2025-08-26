@@ -21,14 +21,14 @@ W - Won't (have)
     V -> Gérer par l'éditeur un bouton interractif dans l'historique des réservations pour passer les réservations au statut confirmé une fois le paiment sur place du restant du.
     -> Ajouter dans le ReadMe si necessaire le : composer require symfony/security-core
 - Should :
-    ->  Cookie
+    V ->  Cookie
     ->  Faire une réflection complète du site pour gérer les droits du ROLE_EDITOR
     ->  Gérer le responsive
 - Could :
     -> Checker l'accessibilité mal/non voyants, contraste des couleurs
     -> section review sur les retours client des produits/site
     -> Take attention to référencement : meta-description
-    -> suppression utilisateur (comment anonymisé des utilisateurs ou supprimé tout ce qui est personnel dans le compte), ajouter un code de référence clients dans l'entité client,
+    -> suppression utilisateur (comment anonymiser des utilisateurs ou supprimer tout ce qui est personnel dans le compte), ajouter un code de référence clients dans l'entité client,
     -> ajouter le IsConfirmed pour l'adresse mail des clients
     -> Admin/Produits Avoir la possibilité de modifier les tarifs par nuit en fonction de plages de dates précises (Saison haute...)
 - Won't :

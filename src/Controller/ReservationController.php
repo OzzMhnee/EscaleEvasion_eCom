@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Product;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\Reservation;
+
 use App\Form\ReservationType;
 use App\Repository\ReservationRepository;
 use App\Repository\ProductRepository;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('admin/reservation')]
+#[Route('/admin/reservation')]
 class ReservationController extends AbstractController
 {
     //region Liste des réservations d'un produit
@@ -34,7 +35,7 @@ class ReservationController extends AbstractController
     #[Route('/confirm-on-site/{id}', name: 'reservation_confirm_on_site', methods: ['POST'])]
     public function confirmOnSite(Reservation $reservation, EntityManagerInterface $em, Request $request): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+        $this->denyAccessUnlessGranted(['ROLE_EDITOR', 'ROLE_ADMIN']);
         if ($this->isCsrfTokenValid('confirmonsite' . $reservation->getId(), $request->request->get('_token'))) {
             $reservation->setStatus('confirmée');
             $reservation->setIsCompleted(false);
@@ -47,6 +48,21 @@ class ReservationController extends AbstractController
         }
         return $this->redirectToRoute('app_reservation_all_calendar');
     }
+    //endregion
+
+    //region Confirmation du dernier paiement sur place
+    #[Route('/completed/{id}', 'app_reservation_completed')]
+    public function ConfirmCompleted(Reservation $reservation, EntityManagerInterface $em, Request $request): Response
+    {
+
+
+        $reservation->setIsCompleted(true);
+        $em->flush();
+        $this->addFlash('success', 'La réservation a bien été marquée comme complétée.');
+
+        return $this->redirectToRoute('app_reservation_all_calendar');
+    }
+
     //endregion
 
     //region Liste de toutes les réservations

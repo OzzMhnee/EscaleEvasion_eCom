@@ -77,7 +77,7 @@
 
    - ***Créez la base de données si besoin :***
      ```bash
-     php [bin/console](VALID_FILE) doctrine:database:create
+     php bin/console doctrine:database:create
      ```
 
 4. ### Lancez les migrations:

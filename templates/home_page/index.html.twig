@@ -1,27 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Escale Evasion
-{% endblock %}
+{% block title %}Escale Evasion{% endblock %}
 
 {% block body %}
 	<style>
 		.Glogo {
 			width: 222px;
 			height: auto;
-			position: absolute;
-			top: 150px;
-			left: 50%;
-			transform: translateX(-50%);
 		}
 		.parallax-title {
-			position: absolute;
-			top: 50px;
-			left: 50%;
-			transform: translateX(-50%);
-			color: white;
+            color: white;
 			text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
             font-family: 'MaPolicePerso', Arial, sans-serif;
 			font-size: 3rem;
+            margin-top: -px;
 		}
 		@font-face {
 			font-family: 'MaPolicePerso';
@@ -29,19 +21,15 @@
 			font-weight: normal;
 			font-style: normal;
 		}
-		span {
-
-		}
 	</style>
 
 	<div class="parallax d-flex flex-column align-items-center ">
-		<img class="Glogo" src="/img/GrandLogoLight.png" alt="">
 		<div class="parallax-title">
-			<span>
-				Bienvenue sur Escale Evasion</span>
+			<span> Bienvenue sur Escale Evasion</span>
 		</div>
-		<div class="card p-4 bg-light bg-opacity-50" style="max-width: 1300px; margin: 0 auto;">
-			<form method="get" action="{{ path('app_user_all_products') }}" class="d-flex flex-column align-items-center my-4">
+		<img class="Glogo mb-5" src="/img/GrandLogoLight.png" alt="">
+		<div class="card p-4 bg-light bg-opacity-50 mb-5" style="max-width: 1300px; margin: 0 auto;">
+			<form method="get" action="{{ path('app_user_all_products') }}" class="d-flex flex-column align-items-center ">
 				<h2 class="mb-5">Recherche des disponibilités</h2>
 				<div class="col">
 					<input type="text" id="home_startDate" name="startDate" class="form-control" placeholder="Date d'arrivée" autocomplete="off">
