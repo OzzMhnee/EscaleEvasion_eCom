@@ -20,16 +20,31 @@ W - Won't (have)
     V -> Création d'une interface Admin pour créer les textes pré-formulés.
     V -> Gérer par l'éditeur un bouton interractif dans l'historique des réservations pour passer les réservations au statut confirmé une fois le paiment sur place du restant du.
     -> Ajouter dans le ReadMe si necessaire le : composer require symfony/security-core
+    -> Dans "mes réservations" ajouter l'image principale dans un lien.
+    --> Checker tout ce qui peut être arrangé d'après Lighthouse
+    --> suite à mes modif background css à reprendre
+    --> RESPONSIVE : Dans product Show Réduire description, régler carrousel
+    --> RESPONSIVE : Dans messages Contacter : mt-5 +/- hr sur btn envoyer
+    --> RESPONSIVE : Réserver produit régler Input et div width
+    --> RESPONSIVE : liste des produits (all, cat, ss-cat) taille photo dans leur div incohérente
+    --> RESPONSIVE : parallax title / reduire Glogo
+    --> RESPONSIVE : Burger Menu ! align right li, modifier order (mon compte , cat, admin, recherche et svg dessous)
 - Should :
     V ->  Cookie
+    -> Admin/Produits Avoir la possibilité de modifier les tarifs par nuit en fonction de plages de dates précises (Saison haute...)
     ->  Faire une réflection complète du site pour gérer les droits du ROLE_EDITOR
     ->  Gérer le responsive
 - Could :
+    -> Remanier le transfert des messages préféninis avec /n
     -> Checker l'accessibilité mal/non voyants, contraste des couleurs
     -> section review sur les retours client des produits/site
     -> Take attention to référencement : meta-description
     -> suppression utilisateur (comment anonymiser des utilisateurs ou supprimer tout ce qui est personnel dans le compte), ajouter un code de référence clients dans l'entité client,
     -> ajouter le IsConfirmed pour l'adresse mail des clients
-    -> Admin/Produits Avoir la possibilité de modifier les tarifs par nuit en fonction de plages de dates précises (Saison haute...)
+
 - Won't :
     -> Avoir les cdn dans nos dépendances (????? Je sais pas faire donc pas pour le moment)
+    -> favoris
+    --> RESPONSIVE : ADMIN Pour bien travailler il faut le faire sur un pc !
+
+
